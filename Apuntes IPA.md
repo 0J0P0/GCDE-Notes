@@ -169,13 +169,13 @@ $$ q(x) = \beta(\alpha(x)) $$
 
 Levels $y_i$ are centered around the midpoints of the intervals $[\Delta_{i-1}, \Delta_i], \ i = 1, ..., L$. Loss of one level. L odd.
 
-$$\Delta_i = \frac{1}{L} i, \ L = 2^B, \ B = \#bits$$
+$$\Delta_i = \frac{1}{L} i, \ L = 2^B, \ B = bits$$
 
 **Mid-tread quantizer**:
 
 Levels $y_i$ are centered around the midpoints of the intervals $[\Delta_{i-1}, \Delta_i], \ i = 1, ..., L$. Symmetric around 0. Loss of one level. L even. Mid-tread quantizer is best for noice suppression.
 
-$$\Delta_i = \frac{1}{L} i, \ L = 2^B-1, \ B = \#bits$$
+$$\Delta_i = \frac{1}{L} i, \ L = 2^B-1, \ B = bits$$
 
 **Quantization error**:
 
