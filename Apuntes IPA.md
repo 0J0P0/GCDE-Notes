@@ -12,7 +12,7 @@
 
 - **Mean** (first order moment): $\mu = E[X] = \sum_{x \in \Omega} x P(X=x)$
 
-- **Variance** (second order moment): $\sigma^2 = E[(X-\mu)^2]
+- **Variance** (second order moment): $\sigma^2 = E[(X-\mu)^2]$
 - The **variance** measures the dispersion of the random variable around its mean.
 
 $$ \sigma_X^2 = E[(X-\mu_X)^2] = E[X^2] - E[X]^2 $$
