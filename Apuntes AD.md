@@ -1,5 +1,25 @@
 # AD - Data Analysis
 
+- [AD - Data Analysis](#ad---data-analysis)
+  - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
+    - [What is PCA?](#what-is-pca)
+    - [Objective](#objective)
+    - [Steps of PCA](#steps-of-pca)
+    - [Theory of PCA](#theory-of-pca)
+    - [Scree plot](#scree-plot)
+    - [Standardization of variables](#standardization-of-variables)
+  - [Factor Analysis](#factor-analysis)
+    - [What is Factor Analysis?](#what-is-factor-analysis)
+    - [Variance of the factors](#variance-of-the-factors)
+    - [Fractor Analysis by using PCA](#fractor-analysis-by-using-pca)
+      - [Communality](#communality)
+  - [Rotation](#rotation)
+    - [Orthogonal rotation](#orthogonal-rotation)
+    - [Oblique rotation](#oblique-rotation)
+  - [Multidimensional Scaling](#multidimensional-scaling)
+    - [What is Multidimensional Scaling?](#what-is-multidimensional-scaling)
+
+
 ## Principal Component Analysis (PCA)
 
 ### What is PCA?
@@ -16,11 +36,11 @@ The transformation is defined in such a way that the first principal component h
 
 ### Objective
 
-Dimension reduction. Done by considering correlation between variables. 
+- Dimension reduction: by considering correlation between variables. Lower dimensionality of the data while retaining as much information as possible. 
+  - This makes visualization easier. It gives a better understanding of the data.
 
-To construct new uncorrelated variables called **principal components**.
+- To construct new uncorrelated variables called **principal components**.
 
-Lower dimensionality of the data while retaining as much information as possible. This makes visualization easier. It gives a better understanding of the data.
 
 ### Steps of PCA
 
@@ -28,7 +48,7 @@ Lower dimensionality of the data while retaining as much information as possible
 
 2. Center the data. This is done by subtracting the mean of each variable from each observation of that variable. This is done to make sure that the variables are centered around zero.
 
-3. Calculate the covariance matrix. This is done by multiplying the centered data matrix by its transpose. The covariance matrix is a square matrix with the number of rows and columns equal to the number of variables.
+3. Calculate the covariance matrix $S$. This is done by multiplying the centered data matrix by its transpose. The covariance matrix is a square matrix with the number of rows and columns equal to the number of variables.
 
 4. Calculate the eigenvectors and eigenvalues of the covariance matrix. The eigenvectors are the principal components. The eigenvalues are the variances of the principal components.
 
@@ -40,13 +60,13 @@ Lower dimensionality of the data while retaining as much information as possible
 
 The first principal component $Z_1$ is the linear combination of the original variables that accounts for the largest amount of variance in the data. The second principal component $Z_2$ is the linear combination of the original variables that accounts for the second largest amount of variance in the data, and is orthogonal to $Z_1$.
 
-The third principal component $Z_3$ is the linear combination of the original variables that accounts for the third largest amount of variance in the data, and is orthogonal to both $Z_1$ and $Z_2$, and so on. The $i^{th}$ principal component $Z_i$ is the linear combination of the original variables that accounts for the $i^{th}$ largest amount of variance in the data, and is orthogonal to all the previous principal components.
+The $i^{th}$ principal component $Z_i$ is the linear combination of the original variables that accounts for the $i^{th}$ largest amount of variance in the data, and is orthogonal to all the previous principal components.
 
 $$Z_1 = u_{11} x_1 + u_{12} x_2 + ... + u_{1p} x_p$$
 
-where $Z_i$ is the $i^{th}$ principal component, $u_1, u_2, ..., u_p$ are the eigenvectors of the covariance matrix (orthonormal), and $x_1, x_2, ..., x_p$ are the original variables.
+where $Z_i$ is the $i^{th}$ principal component, $u_1, u_2, ..., u_p$ are the eigenvectors (loading vectors) of the covariance matrix (orthonormals), and $x_1, x_2, ..., x_p$ are the original variables.
 
-Each $Z_i$ has a individual score for each observation. $Z_i$ is uncorrelateed with all the other PC since they are orthogonal to each other.
+The loading vector $u_1$ defines a direction in the feature space along which the data vary the most.
 
 In matrix notation:
 
@@ -68,7 +88,7 @@ $$ \text{Var}(Z) = \frac{1}{n-1}Z^TZ = ... = D_{\lambda} $$
 
 The total variance of the PC is the sum of the eigenvalues of the covariance matrix.
 
-$$ \text{Var}(Z) = \sum_{i=1}^p \lambda_i = \sum_{i=1}^p s^2_{ii} = \text{trace}(S) $$
+$$ \text{Total var}(Z) = \sum_{i=1}^p \lambda_i = \sum_{i=1}^p s^2_{ii} = \text{trace}(S) $$
 
 The proportion of variance explained by the $i^{th}$ principal component is the ratio of the $i^{th}$ eigenvalue to the sum of all the eigenvalues.
 
@@ -82,26 +102,34 @@ The scree plot is a plot of the eigenvalues of the covariance matrix. The eigenv
 
 $$ P_j = \frac{\lambda_j}{\sum_{i=1}^p \lambda_i} $$
 
-The number of principal components to keep is the number of eigenvalues that are above the horizontal line. The horizontal line is the eigenvalue that is equal to the average of the eigenvalues. The average of the eigenvalues is the average of the variances of the principal components.
+The number of principal components to keep is the number of eigenvalues that are above the horizontal line. The horizontal line is the eigenvalue that is equal to the average of the eigenvalues.
 
 ### Standardization of variables
 
 Standardization is a method of transforming variables so that they have a mean of zero and a standard deviation of one. This is done to make sure that the variables are on the same scale.
 
+- If the $x_i$ variables are standardized (zero mean), then the covariance matrix $S$ is the correlation matrix $R$.
+- Standardization is necessary when the units of measurement of the variables are different.
+
 Correlation between variables is not affected by standardization, they are independent of measurement units. The eigenvalues are affected by standardization because the covariance matrix is affected by standardization.
+
 
 
 ## Factor Analysis
 
 ### What is Factor Analysis?
 
-Factor analysis is a statistical method used to describe variability among observed, correlated variables in terms of a potentially lower number of unobserved variables called factors. Factor analysis is used to describe the underlying structure of observed variables in terms of a smaller number of unobserved variables called factors. The factors are linear combinations of the observed variables. The factors are assumed to be uncorrelated. The observed variables are assumed to be linear combinations of the factors plus random error. The factors are assumed to be uncorrelated with the random error. The factors are assumed to be normally distributed. The random error is assumed to be normally distributed.
+Factor analysis is a statistical method used to describe variability among observed, correlated variables in terms of a potentially lower number of unobserved variables called factors. 
 
-Based on a model where the variables can be written as a linear combination of factors plus random error. The factors are assumed to be uncorrelated with the random error. The factors are assumed to be normally distributed. The random error is assumed to be normally distributed.
+- The observed variables are assumed to be linear combinations of the factors plus random error.
+- The factors are assumed to be uncorrelated.
+- The factors are assumed to be normally distributed. 
+- The random error is assumed to be normally distributed.
+
 
 $$ X_i = a_{i1} F_1 + a_{i2} F_2 + ... + a_{ip} F_p + \epsilon_i $$
 
-where $X_i$ is the $i^{th}$ observation of the $p$ variables, $F_1, F_2, ..., F_p$ are the $p$ uncorrelated factors (mean zero and unit variance), $a_{ij}$ are the factor loadings, and $\epsilon_i$ is the random error (mean zero).
+where $X_i$ is the $i^{th}$ standardized observation of the $p$ variables, $F_1, F_2, ..., F_p$ are the $p$ uncorrelated factors (mean zero and unit variance), $a_{ij}$ are the factor loadings, and $\epsilon_i$ is the random error (zero mean).
 
 $$ \epsilon_i \sim N(0, \Sigma) $$
 
@@ -111,23 +139,23 @@ where $X$ is the matrix of observations $(n\times p)$, $F$ is the matrix of fact
 
 ### Variance of the factors
 
-The variance of the factors is the sum of the variances of the factors and the variances of the random error.
-
-$$ \text{Var}(F) = \text{Var}(F) + \text{Var}(\epsilon) $$
-
 The variance of $X_i$ is the sum of the variances of the factors and the variances of the random error.
 
 $$ \text{Var}(X_i) = a_{i1}^2 \text{Var}(F_1) + a_{i2}^2 \text{Var}(F_2) + ... + a_{ip}^2 \text{Var}(F_p) + \text{Var}(\epsilon_i) $$
 
 ### Fractor Analysis by using PCA
 
-To trasnform the pc to factors, we need to standarize the variables. So that 
+If $m$ components are selected from the PCA, the random error term corresponds to the remaining $p-m$ components (linear combination).
 
-$$ a_{ij} = u_{ij}\sqrt{\lambda_j} $$
+$$ X_i = u_{1i}Z_1 + u_{2i}Z_2 + ... + u_{mi}Z_m + \epsilon_i $$
 
-where $u_{ij}$ is the $i^{th}$ eigenvector of the covariance matrix, and $\lambda_j$ is the $j^{th}$ eigenvalue of the covariance matrix.
+where $Z_1, Z_2, ..., Z_m$ are the $m$ principal components (since the eigenvectors are orthonormal), and $u_{1i}, u_{2i}, ..., u_{mi}$ are the eigenvecotrs of the covariance matrix.
 
-...
+To trasnform the PC to factors, we need to standarize the variables. So that 
+
+$$ a_{ij} = u_{ij}\sqrt{\lambda_j} \implies F_i = \frac{Z_i}{\sqrt{\lambda_i}} $$
+
+where $\lambda_i$ is the $i^{th}$ eigenvalue of the covariance matrix.
 
 #### Communality
 
