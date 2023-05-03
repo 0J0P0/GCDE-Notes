@@ -18,6 +18,12 @@
     - [Oblique rotation](#oblique-rotation)
   - [Multidimensional Scaling](#multidimensional-scaling)
     - [What is Multidimensional Scaling?](#what-is-multidimensional-scaling)
+    - [Algorithm](#algorithm)
+  - [Correspondence Analysis](#correspondence-analysis)
+    - [What is Correspondence Analysis?](#what-is-correspondence-analysis)
+      - [Contingency table](#contingency-table)
+    - [Test of independency](#test-of-independency)
+    - [Profiles](#profiles)
 
 
 ## Principal Component Analysis (PCA)
@@ -185,18 +191,71 @@ Similarity and distance are inversevely related. The closer the points are, the 
 
 Similarity: $s(x, y)$
 
+- For categorical variables it can be defined as
+$$ s(x, y) = \alpha / k, \ \ \alpha = \sum 1_{x_i = y_i} $$
+  - where $k$ is the number of categories.
+
 Distance: $d(x, y)$
 
 $$ d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y) $$
 
-**Similarity matrix**: $Q = X^TX$
+**Similarity matrix**: $Q = X^TX$, where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - 11)X$ is used as a centered transformation of $X$.
 
-since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element. If the elements are different, the dot product close to zero.
+since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element ($\cos(\alpha_{ij}) = 1$). If the elements are different, the dot product close to zero.
 
 **Distance matrix**: $D$
 
-$$ D_{ij} = \sqrt{Q_{ii} + Q_{jj} - 2Q_{ij}} $$
-
-since,
-
 $$ d_{ij}^2 = s_{ii} + s_{jj} - 2s_{ij} = \sum_{k=1}^p x_{ik}^2 + \sum_{k=1}^p x_{ik}^2 - 2\sum_{k=1}^p x_{ik}x_{jk} = \sum_{k=1}^p (x_{ik} - x_{jk})^2$$
+
+### Algorithm
+
+1. Compute the distance matrix $D$ and $D^2$.
+2. Define the centering matrix $P = I - \frac{1}{n}11^T$.
+3. Build the cross product matrix $Q = -\frac{1}{2}PD^2P$.
+4. Build $X = V_p \Lambda^{1/2}_p$, where $V$ is the matrix of eigenvectors of $Q$ and $\Lambda$ is the diagonal matrix of eigenvalues of $Q$. Using the $p$ greatest eigenvalues.
+
+## Correspondence Analysis
+
+### What is Correspondence Analysis?
+
+Correspondence analysis is a statistical technique for displaying the rows and columns of a contingency table in a low-dimensional space. The rows and columns are represented as points in a geometric space. The geometric space is defined by the correspondence between the rows and columns.
+
+- To understand relationships between categorical variables.
+  - Visualize associations between categorical variables.
+- Understand the contingency table as a data matrix.
+
+#### Contingency table
+
+A contingency table is a table showing the categories of one variable in rows and another in columns.
+
+Each cell $x_{ij}$ is the number of observations that fall into the $i^{th}$ row category and the $j^{th}$ column category.
+
+- Margin: row or column total $x_{i.}$ or $x_{.j}$
+  - Marginal probability: $f_{i.} = \frac{x_{i.}}{n}$ or $f_{.j} = \frac{x_{.j}}{n}$
+
+- Frecuency of the cell: $f_{ij} = \frac{x_{ij}}{n}$ (joint probability)
+  - If independent, $f_{ij} = f_{i.}f_{.j}$
+
+- Conditional probability: $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ or $f_{i|j} = \frac{f_{ij}}{f_{.j}}$
+
+### Test of independency
+
+The null hypothesis is that the two categorical variables are independent.
+
+- Chi square test of independence
+
+$$ \chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(n f_{ij} - n f_{i.}f_{.j})^2}{n f_{i.}f_{.j}} = n \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+
+- where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
+
+- $\phi^2$ is called link. The deviation of the link is associated with the desviation of observed from expected values.
+
+### Profiles
+
+Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$.
+
+
+
+
+
+
