@@ -24,6 +24,8 @@
       - [Contingency table](#contingency-table)
     - [Test of independency](#test-of-independency)
     - [Profiles](#profiles)
+      - [Cloud of profiles $N\_I$ or $N\_J$](#cloud-of-profiles-n_i-or-n_j)
+    - [Intertia](#intertia)
 
 
 ## Principal Component Analysis (PCA)
@@ -254,7 +256,23 @@ $$ \chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = 
 
 Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$.
 
+#### Cloud of profiles $N_I$ or $N_J$
 
+The bigger the distance, the higher variance between the point of the plots.
+
+**Distance**: $d_{i,l}^2 = \sum_{j=1}^J \frac{1}{f_{.j}} (\frac{f_{ij}}{fi.} - \frac{f_{lj}}{f_{l.}})^2$
+
+
+### Intertia
+
+The inertia is the sum of the squared distances between the points and the center of the cloud of points $G_I$.
+
+- The center of the cloud corresponds to the row/column with the most similar pattern to the median profile.
+- The farther the point in the cloud from the center, the less similar the profile is to the median profile.
+
+$$ Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I}^2 = \phi^2$$
+
+$$ Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
 
 
