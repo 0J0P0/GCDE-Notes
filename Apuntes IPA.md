@@ -1,4 +1,6 @@
+# Introduction to Audio and Image Processing
 
+- [Introduction to Audio and Image Processing](#introduction-to-audio-and-image-processing)
 - [1. Statistical Signal Modeling](#1-statistical-signal-modeling)
   - [1.1. Introduction](#11-introduction)
     - [1.1.b Random Variable](#11b-random-variable)
@@ -14,6 +16,10 @@
 - [3. Optimal and Adaptative Filtering](#3-optimal-and-adaptative-filtering)
   - [Wiener-Hopf filter](#wiener-hopf-filter)
     - [Minimum MSE prediction](#minimum-mse-prediction)
+  - [Linear prediction](#linear-prediction)
+    - [Linear prediction coding](#linear-prediction-coding)
+    - [Linear prediction coding of speech signals](#linear-prediction-coding-of-speech-signals)
+  - [Adaptive filters](#adaptive-filters)
 
 # 1. Statistical Signal Modeling
 
@@ -343,44 +349,48 @@ Increasing number of samples: The conditional probability $f(x|\theta)$ will be 
 
 # 3. Optimal and Adaptative Filtering
 
+Given a set of data from an observed noisy process $x[x]$ and a desired target process $d[n]$ that we want to estimate, produce an estimated of the target process $y[n]$ by a linear time-invariant filter $h[n]$.
+
 ## Wiener-Hopf filter
 
-The Wiener-Hopf filter is the optimal linear filter for a stationary random process $X[n]$.
+- Assume known stationary signal and correlation.
+
+The Wiener-Hopf filter is the optimal linear filter for a stationary random process $x[n]$.
 
 - Observed noisy process $x[n] = a[n] + b[n]$ (observations).
 - Desired target process we want to estimate $d[n] = a'[n] + b[n]$ (reference).
 - Estimated of the target process $y[n]$ (output of the filter).
 - $r_{aa'} \neq 0$ (only two parts correlated)
 
-**System identification**:
+**System identification**: identify a given sistem (model).
 - Noisy reference signal $d[n]$.
 - Noise-free observation signal $x[n]$.
 
-**System inversion**
+**System inversion**: estimate a system and apply its inverse to the signal.
 - Noisy observation signal $x[n]$.
 - Noise-free reference signal $d[n]$.
 
 **Signal prediction**
 - Observation and reference samples of the same noisy process.
 
-**Signal cancelation**
+**Signal cancelation**: compare the primary signal $d[n]$ with the interference $x[n]$. The clean signal is $e[n]$.
 - Noisy observations with interferences.
 - Noisy interferences as reference signal.
 
 ### Minimum MSE prediction
-
-The Wiener-Hopf filter minimizes the MSE between the desired signal and the output of the filter.
-
+- Used as a optimization criteria.
 - Mathematically tractable
 - Useful for real solution applications
+
+The Wiener-Hopf filter minimizes the MSE between the desired signal and the output of the filter.
 
 $$ \min_{h} E[e[n]^2] = \min_{h} E[(d[n] - y[n])^2] = \min_{h} E[(d[n] - h^T x[n])^2] $$
 
 which implies that:
 
-$$ \nabla E[e[n]^2] = 0 \implies \nabla E[(d[n] - h^T x[n])^2] = 2E[(d[n]-h^T x[n]) \cdot (-x[n])] = E[e[n] x[n]] = 0 $$
+$$ \nabla_h E[e[n]^2] = 0 \implies \nabla_h E[(d[n] - h^T x[n])^2] = 2E[(d[n]-h^T x[n]) \cdot (-x[n])] = E[e[n] x[n]] = 0 $$
 
-and $x[n]$ and $d[n]$ with zero mean.
+and $x[n]$ and $d[n]$ with zero mean, with error orthogonal to the observations.
 
 Under $h_{opt}$, the solution of the Wiener-Hopf equation:
 
@@ -388,7 +398,7 @@ Under $h_{opt}$, the solution of the Wiener-Hopf equation:
 
 - $E[d[n]^2] \geq E[e[n]^2]$ (minimum MSE)
 
-- If $E[x[n]d[n]] = 0 \implies E[y[n]^2] = 0$ (minimum MSE)
+- If $E[x[n]d[n]] = 0 \implies E[y[n]^2] = 0$ (if the observations are uncorrelated with the desired signal, the variance of the estimation is zero)
 
 - $\epsilon = E[e[n]^2] = r_d[0] - r_{dx}^T h_{opt}$ (minimum variance of the error = minimum MSE)
 
@@ -409,4 +419,33 @@ $$ E[e[n]^2] = \epsilon + (h_{opt} - h)^T R_x (h_{opt} - h) $$
 where $\epsilon = r_d[0] - r_{dx}^T h_{opt}$ is the variance of the error.
 
 
+##  Linear prediction
+
+The Wiener-hopf filter in the context of _forward prediction_.
+
+- Reference: $d[n] = s[n]$
+- Observations: $\underline{x}[n] = \underline{s}[n-1]$
+- Estimation: $y[n] = \hat{s}[n]$
+
+### Linear prediction coding
+
+**Coding gain**: $G = \frac{E[s^2[n]]}{E[e^2[n]]}$
+
+The decoder recieves the filter that has been used for prediction and the prediction errror.
+
+By quantizing: $e[n]_q = e[n] + \epsilon_q[n]$
+
+###  Linear prediction coding of speech signals
+
+- Sound signal makes the vocal cords vibrate.
+
+## Adaptive filters
+
+- The Wiener-Hopf filter is not optimal for a non-stationary process.
+  - Not fixed system. Time variant.
+  - The Wiener-Hopf filter should adapt to the statistical variations of the process based on the study of the error.
+
+**Speed of convergence**: The number of samples required to adapt the filter to the new stationarity.
+
+**Misadjustment**: The difference between the optimal filter and the adaptive filter.
 
