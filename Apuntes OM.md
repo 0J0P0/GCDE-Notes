@@ -65,7 +65,7 @@ if x is a regular point and a local minimizer, then there exists $\lambda^*$ and
 
 1. $h(x) = 0, g(x) \leq 0$
 2. $\nabla_x L(x, \lambda^\*, \mu^\*) = 0$
-3. $\mu^* \geq 0, \ \lambda^* \geq 0$ and $\mu^*_i g_i(x) = 0$ if ($g_i(x) < 0$) then $\mu^*_i = 0$.
+3. $\mu^\* \geq 0, \ \lambda^\* \geq 0$ and $\mu^\*\_i g_i(x) = 0$ if ($g_i(x) < 0$) then $\mu^\*_i = 0$.
 
 
 ### Second order conditions
