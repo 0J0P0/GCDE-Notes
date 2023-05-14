@@ -64,7 +64,7 @@ The plane T is the set of directions that preserve feasibility and decrease f.
 if x is a regular point and a local minimizer, then there exists $\lambda^*$ and $\mu^*$ such that:
 
 1. $h(x) = 0, g(x) \leq 0$
-2. $\nabla_x L(x, \lambda^*, \mu^*) = 0$
+2. $\nabla_x L(x, \lambda^\*, \mu^\*) = 0$
 3. $\mu^* \geq 0, \ \lambda^* \geq 0$ and $\mu^*_i g_i(x) = 0$ if ($g_i(x) < 0$) then $\mu^*_i = 0$.
 
 
