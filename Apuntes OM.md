@@ -25,13 +25,13 @@ Direction $d$ preserves feasibility if $\nabla h(x + d) = 0$ (up to first-order)
 
 $$\nabla h(x)^T d = 0, \ \ h(x + d) = 0 = h(x) + \nabla h(x)^T d$$
 
-Direction $d$ preserves feasibility if $\nabla g(x + d) \approx g(x) + \nabla g(x)^T d \leq 0$ (up to first-order).
+Direction $d$ preserves feasibility if $\nabla g(x + d) \approx g(x) + \nabla g(x)^T d \leq 0$ (up to first-order). (or $\geq$)
 
 ### Descent direction
 
 Direction decreseas $f$ if $\nabla f(x)^T d < 0$ (up to first-order).
 
-$$\nabla f(x)^T d = 0, \ \ f(x + d) = f(x) + \nabla f(x)^T d  \implies f(x + d) < f(x)$$
+$$\nabla f(x)^T d < 0, \ \ f(x + d) = f(x) + \nabla f(x)^T d  \implies f(x + d) < f(x)$$
 
 
 **For $g$ active**: If at $x$ there is a direction $d$ at the intersection of the hyper-planes $\nabla g(x)^Td \leq 0$, $\nabla f(x)^T d < 0$, then $x$ is not a minimizer.
@@ -79,6 +79,12 @@ with $x$ as a local minimizer and a regular point.
 **Sufficient condition**:
 
 $$\nabla^2_x L(x, \lambda, \mu) \succ 0$$
+
+$$
+d^T \nabla^2_x L(x, \lambda, \mu) d \succ 0, \ \ \forall c \in M \\
+M = \{d \in \mathbb{R}^n \ | \ \nabla h_i(x)^T d = 0, \ \nabla g_j(x)^T d = 0 \ \forall i, j \}
+$$
+
 
 no need for $x$ to be a regular point. $x$ becomes a strict local minimizer.
 
