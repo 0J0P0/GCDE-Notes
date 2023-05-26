@@ -90,6 +90,70 @@ no need for $x$ to be a regular point. $x$ becomes a strict local minimizer.
 
 If we are dealing with a convex problem, the KKT are necessary and sufficient conditions for optimality.
 
+## Duality
+
+From a primal problem, we can derive a dual problem. The dual problem is a lower bound of the primal problem. If the primal problem is convex, then the dual problem is a tight lower bound.
+
+$$
+q(\lambda, \mu) = \min_x L(x, \lambda, \mu) \\
+\max_{\lambda, \mu} q(\lambda, \mu) \\
+s.t. \ \ \ \mu \geq 0
+$$
+
+### Concavity
+
+The dual function $q(\lambda, \mu)$ is concave.
+
+### Weak duality theorem
+
+Let $x$ be a feasible point of the primal problem and $(\lambda, \mu)$ be a feasible point of the dual problem. Then:
+
+$$q(\lambda, \mu) \leq f(x)$$
+
+The distnace between the dual and primal is the duality gap.
+
+### Strong duality theorem
+
+If the primal problem is convex and has a feasible point, then the dual problem has a feasible point and the duality gap is zero.
+
+$$q(\lambda, \mu) = f(x)$$
+
+Strong dfuality is satisfied by LP and QP problems. And most of convex problems.
+
+### Wolfe duality theorem
+
+If $f, h_i, g_j$ are convex and differentiable, a necessary and sufficient condition of optimality of the dual function is 
+
+$$\nabla L(x, \lambda, \mu) = 0$$
+
+and thus the dual function can be rewritten as:
+
+$$
+\max \ \ \ L(x, \lambda, \mu) \\
+s.t. \ \ \ \nabla L(x, \lambda, \mu) = 0 \\
+\mu \geq 0
+$$
+
+### Dual linear optimization
+Primal problem:
+$$
+\min c^T x \\
+s.t. \ \ \ Ax = b \ [\lambda] \\
+x \geq 0
+$$
+
+Dual problem:
+$$
+\max b^T \lambda \\
+s.t. \ \ \ A^T \lambda = c \\
+$$
+
+### Dual quadratic optimization
+
+
+
+
+
 
 
 
