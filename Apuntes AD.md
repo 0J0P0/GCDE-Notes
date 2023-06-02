@@ -26,6 +26,15 @@
     - [Profiles](#profiles)
       - [Cloud of profiles $N\_I$ or $N\_J$](#cloud-of-profiles-n_i-or-n_j)
     - [Intertia](#intertia)
+  - [Multiple Correspondence Analysis](#multiple-correspondence-analysis)
+  - [Cluster Analysis](#cluster-analysis)
+    - [Hierarchical clustering](#hierarchical-clustering)
+      - [Single nearest neighbor](#single-nearest-neighbor)
+      - [Single farthest neighbor](#single-farthest-neighbor)
+      - [Average linkage](#average-linkage)
+      - [Centroide distance](#centroide-distance)
+      - [Ward's criterion](#wards-criterion)
+  - [Linear Discriminant Analysis](#linear-discriminant-analysis)
 
 
 ## Principal Component Analysis (PCA)
@@ -102,7 +111,7 @@ The proportion of variance explained by the $i^{th}$ principal component is the 
 
 $$ \frac{\lambda_i}{\sum_{i=1}^p \lambda_i} $$
 
-in order to decide the number of components to keep, we need to decide the proportion of variance we want to keep. This can be done by looking the magnitude of the eigenvalues or by the *scree plot*.
+in order to decide the number of components to keep, we need to decide the proportion of variance we want to keep ($80\%$). This can be done by looking the magnitude of the eigenvalues or by the *scree plot*.
 
 ### Scree plot
 
@@ -189,6 +198,8 @@ Oblique rotation is a method of transforming the factor loadings so that the fac
 
 Multidimensional scaling (MDS) is a statistical technique for reducing the dimensionality of a data set by representing the data as points in a geometric space. The geometric space is defined by the distances between the points. 
 
+- Is a generalization of PCA. Instead of using the covariance matrix, it uses the similarity matrix.
+
 Similarity and distance are inversevely related. The closer the points are, the more similar they are. The farther the points are, the less similar they are.
 
 Similarity: $s(x, y)$
@@ -207,6 +218,8 @@ since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If bo
 
 **Distance matrix**: $D$
 
+Since the covariance matrix is a similarity matrix $q_{ij} = s_{ij}$, the distance matrix can be computed as
+
 $$ d_{ij}^2 = s_{ii} + s_{jj} - 2s_{ij} = \sum_{k=1}^p x_{ik}^2 + \sum_{k=1}^p x_{ik}^2 - 2\sum_{k=1}^p x_{ik}x_{jk} = \sum_{k=1}^p (x_{ik} - x_{jk})^2$$
 
 ### Algorithm
@@ -216,11 +229,15 @@ $$ d_{ij}^2 = s_{ii} + s_{jj} - 2s_{ij} = \sum_{k=1}^p x_{ik}^2 + \sum_{k=1}^p x
 3. Build the cross product matrix $Q = -\frac{1}{2}PD^2P$.
 4. Build $X = V_p \Lambda^{1/2}_p$, where $V$ is the matrix of eigenvectors of $Q$ and $\Lambda$ is the diagonal matrix of eigenvalues of $Q$. Using the $p$ greatest eigenvalues.
 
+Recompute $X$ from $D$ and $Q$.
+
 ## Correspondence Analysis
 
 ### What is Correspondence Analysis?
 
 Correspondence analysis is a statistical technique for displaying the rows and columns of a contingency table in a low-dimensional space. The rows and columns are represented as points in a geometric space. The geometric space is defined by the correspondence between the rows and columns.
+
+- Not to check the independence between the rows and columns (that can be done with a $\chi^2$ test).
 
 - To understand relationships between categorical variables.
   - Visualize associations between categorical variables.
@@ -274,6 +291,115 @@ $$ Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_
 
 $$ Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
+## Multiple Correspondence Analysis
 
 
+## Cluster Analysis
 
+- To group individuals
+- To reduce dimensionality
+
+### Hierarchical clustering
+
+**Agglomeration**: Start with each individual in its own cluster and then merge clusters until all individuals are in the same cluster.
+- Close groups are merged first.
+
+**Division**: Start with all individuals in the same cluster and then split clusters until each individual is in its own cluster.
+- Distant groups are split first.
+
+#### Single nearest neighbor
+
+$$
+d(C_1, C_2) = \min_{i \in C_1, j \in C_2} d_{x_i, x_j}
+$$
+
+#### Single farthest neighbor
+
+$$
+d(C_1, C_2) = \max_{i \in C_1, j \in C_2} d_{x_i, x_j}
+$$
+
+#### Average linkage
+
+$$
+d(C_1, C_2) = \frac{1}{|C_1||C_2|} \sum_{i \in C_1, j \in C_2} d_{x_i, x_j}
+$$
+
+#### Centroide distance
+
+$$
+d(C_1, C_2) = d_{\bar{x}_{C_1}, \bar{x}_{C_2}}
+$$
+
+#### Ward's criterion
+
+Minimize the variance of the clusters and maximize the variance between clusters.
+
+$$
+SS_A = \sum_{i=1}^{|C_1|} (x_i - \bar{x_A})^2
+$$
+
+$$
+SS_B = \sum_{i=1}^{|C_2|} (x_i - \bar{x_B})^2
+$$
+
+$$
+SS_{A \cup B} = \sum_{i=1}^{|C_1| + |C_2|} (x_i - \bar{x_{A \cup B}})^2, \ \ \bar{x_{A \cup B}} = \frac{|C_1| \bar{x_A} + |C_2| \bar{x_B}}{|C_1| + |C_2|}
+$$
+
+$$
+\Delta = SS_{A \cup B} - (SS_A + SS_B) = ... = 
+$$
+
+
+## Linear Discriminant Analysis
+
+- The difference with clustering is that we know how many groups we want to find. We want to find the best linear combination of variables that separates the groups.
+
+**Assumptions**:
+- The distribution of a quantitative variable is normal in each category k: $X_k \sim N(\mu_k, \Sigma_k)$
+- The covariance matrices are equal: $\Sigma_1 = \Sigma_2 = ... = \Sigma_k = \Sigma$
+
+The exponent of the multivariate normal distribution is:
+
+$$
+-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)
+$$
+
+which refers to the Mahalanobis distance between the observation and the mean of the category k.
+
+- The bigger the Mahalanobis distance $D_k$, the less likely the observation belongs to the category k.
+
+The probability function that an observation comes from a given category is:
+
+$$
+P(X = x | Y = k) = \frac{1}{(2 \pi)^{p/2} |\Sigma|^{1/2}} e^{-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)}
+$$
+
+Using Bayes' theorem, the probability that an observation belongs to a given category is:
+
+$$
+P(Y = k | X = x) = \frac{P(X = x | Y = k) P(Y = k)}{P(X = x)}
+$$
+
+where $P(Y = k)$ is the prior probability of category k and $P(X = x)$ is the marginal probability of the observation, which is the sum of $P(X = x | Y = k) P(Y = k)$ over all categories.
+
+For two categories, the probability that an observation belongs to category 1 is:
+
+$$
+P(Y = 1 | X = x) = \frac{1}{1 + \frac{\pi_1}{\pi_2} e^{-\frac{1}{2}(D_1^2 - D_2^2)}}
+$$
+
+- The greater the distance $D_1$ and the smaller the distance $D_2$, the greter the denominator and the greater the probability that the observation belongs to category 2. The opposite is true for category 1. Assuming that $\frac{\pi_1}{\pi_2} = 1$.
+
+The maximization of this probability is equivalent to the minimization of the Mahalanobis distance and leads to the Bayes classifier.
+
+The objective is to maximize the ratio of the between-group variance to the within-group variance.
+
+$$
+\frac{\hat{\mu_1} - \hat{\mu_2}}{s_1^2 + s_2^2}
+$$
+
+where $\hat{\mu_k}$ is the mean of the observations in category k and $s_k^2$ is the variance of the observations in category k.
+
+The misclassifications are denoted by $P(1|2)$ and $P(2|1)$ in the case of two categories. Maximizing the ratio of the between-group variance to the within-group variance is equivalent to minimizing the misclassification rate.
