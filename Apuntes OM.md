@@ -58,13 +58,13 @@ where the last condition is the complementary condition. thus when $g_i$ is inac
 
 A feasible point is regular iff:
 
-$$[\nabla h_i(x), \nabla g_j(x)] \ \ \text{are linearly independent} \ \ \forall i, j$$
+$$[\nabla h_i(x), \nabla g_j(x)] \ \ \text{are linearly independent} \ \ \forall i, \forall j\in\mathcal{A}(x)$$
 
 If x is a regular point, then the tanget plane T is equal to M, where M i:
 
 $$M = \{d \in \mathbb{R}^n \ | \ \nabla h_i(x)^T d = 0, \ \nabla g_j(x)^T d \leq 0 \ \forall i, j\}$$
 
-The plane T is the set of directions that preserve feasibility and decrease f.
+The plane T is the set of directions that preserve feasibility and decrease f. 
 
 ## KKT conditions
 
@@ -72,16 +72,15 @@ if x is a regular point and a local minimizer, then there exists $\lambda^*$ and
 
 1. $h(x) = 0, g(x) \leq 0$
 2. $\nabla_x L(x, \lambda^\*, \mu^\*) = 0$
-3. $\mu^\* \geq 0, \ \lambda^\* \geq 0$ and $\mu^\*\_i g_i(x) = 0$ if ($g_i(x) < 0$) then $\mu^\*_i = 0$.
+3. $\mu^\* \geq 0, \ \lambda^\*\in\mathbb{R}$ and $\mu^\*\_i g_i(x) = 0$ if ($g_i(x) < 0$ then $\mu^\*_i = 0$ and viceversa).
 
 
 ### Second order conditions
 
 **Necessary condition**:
 
-$$\nabla^2_x L(x, \lambda, \mu) \succeq 0$$
-
-with $x$ as a local minimizer and a regular point.
+$$\nabla^2_x L(x, \lambda, \mu) \succeq 0\quad \forall d\in M$$ 
+with $x$ as a local minimizer and a regular point and $M=\{d:\nabla h_i(x^*)^\intercal d=0\quad \forall i,\nabla g_i(x^*)^\intercal d=0\quad\forall j\in\mathcal{A}(x)\}$.
 
 **Sufficient condition**:
 
@@ -95,11 +94,12 @@ $$
 
 no need for $x$ to be a regular point. $x$ becomes a strict local minimizer.
 
-If we are dealing with a convex problem, the KKT are necessary and sufficient conditions for optimality.
+If we are dealing with a convex problem, the KKT are necessary and sufficient conditions for optimality. If the problem is strictly convex, the minimum is global. 
+  **Note**: $f,g,h,\in\mathcal{C}^1$ and $f,g$ convex and $h(x)$ affine.
 
 ## Duality
 
-From a primal problem, we can derive a dual problem. The dual problem is a lower bound of the primal problem. If the primal problem is convex, then the dual problem is a tight lower bound.
+From a primal problem, we can derive a dual problem. The dual problem is a lower bound of the primal problem. If the primal problem is convex, then the dual problem is a tight lower bound. 
 
 $$
 q(\lambda, \mu) = \min_x L(x, \lambda, \mu) \\
@@ -117,15 +117,15 @@ Let $x$ be a feasible point of the primal problem and $(\lambda, \mu)$ be a feas
 
 $$q(\lambda, \mu) \leq f(x)$$
 
-The distnace between the dual and primal is the duality gap.
+The distance between the dual and primal is the duality gap.
 
 ### Strong duality theorem
 
-If the primal problem is convex and has a feasible point, then the dual problem has a feasible point and the duality gap is zero.
+If the primal problem is convex and has a feasible point, then the dual problem has a feasible point and the duality gap is zero. (Slater constraint qualification are required).
 
 $$q(\lambda, \mu) = f(x)$$
 
-Strong dfuality is satisfied by LP and QP problems. And most of convex problems.
+Strong duality is satisfied by LP and QP problems. And most of convex problems.
 
 ### Wolfe duality theorem
 
