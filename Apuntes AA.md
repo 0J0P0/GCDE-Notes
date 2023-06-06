@@ -123,7 +123,7 @@ $$\text{true error} \leq \text{training error} + \text{complexity(f)}$$
 
 Función que mide la diferencia entre la predicción y el valor real. Se usa para evaluar el rendimiento del modelo. Mide que tan "lejos" está la predicción del valor real.
 
-$$ L(y, \hat{y})$$
+$$L(y, \hat{y})$$
 
 #### True Error
 
@@ -174,7 +174,7 @@ Usar los valores de los parámetros para predecir nuevos datos.
 
 #### Least Squares univariate linear regression
 
-$$ \hat{y} = \theta_0 + \theta_1 x$$
+$$\hat{y} = \theta_0 + \theta_1 x$$
 
 El metodo de minimos cuadrados es un metodo de optimizacion que minimiza la suma de los cuadrados de las diferencias entre los valores observados y los valores predichos.
 
@@ -208,7 +208,7 @@ Se asume que los datos vienen de un proceso estadístico. Se puede modelar el pr
 
 L es una funcion de los parametros, asumiendo que los datos son independientes e identicamente distribuidos (i.i.d.).
 
-$$ \hat{y} = \theta_0 + \theta_1 x + \epsilon$$
+$$\hat{y} = \theta_0 + \theta_1 x + \epsilon$$
 
 $$\epsilon \sim N(0, \sigma^2)$$
 
@@ -252,7 +252,7 @@ Modelos con alto sesgo tienden a subajustar los datos de entrenamiento.
 
 Posteriors are a way to combine prior knowledge with data. The prior is a distribution over the parameters, and the posterior is a distribution over the parameters given the data.
 
-$$ P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}$$
+$$P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}$$
 
 La distribución posterior es una combinación de la distribución a priori y la distribución de verosimilitud.
 
@@ -614,7 +614,3 @@ Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeño
 
 **Desventajas**:
 - Muchos trees pueden dificultar la interpretacion.
-
-
-
-

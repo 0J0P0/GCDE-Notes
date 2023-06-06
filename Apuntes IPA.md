@@ -20,6 +20,9 @@
     - [Linear prediction coding](#linear-prediction-coding)
     - [Linear prediction coding of speech signals](#linear-prediction-coding-of-speech-signals)
   - [Adaptive filters](#adaptive-filters)
+    - [Steepest descent algorithm](#steepest-descent-algorithm)
+    - [Convergence analysis](#convergence-analysis)
+    - [LMS algorithm](#lms-algorithm)
 
 # 1. Statistical Signal Modeling
 
@@ -38,27 +41,27 @@
 - **Variance** (second order moment): $\sigma^2 = E[(X-\mu)^2]
 - The **variance** measures the dispersion of the random variable around its mean.
 
-$$ \sigma_X^2 = E[(X-\mu_X)^2] = E[X^2] - E[X]^2 $$
+$$\sigma_X^2 = E[(X-\mu_X)^2] = E[X^2] - E[X]^2$$
 
 **Processing of random variables**:
 
-$$ Y = g(X) $$
+$$Y = g(X)$$
 
 - $E[Y] = E[g(X)]$
 
 - $Var[Y] = E[(g(X)-E[g(X)])^2] = E[g(X)^2] - E[g(X)]^2$
 
-$$ f_Y(y) = \bigg | \frac{dg(x)}{dx} \bigg |^{-1} f_X(x) $$
+$$f_Y(y) = \bigg | \frac{dg(x)}{dx} \bigg |^{-1} f_X(x)$$
 
 For adding two random variables (independent): $ Z = Y + X $
 
-$$ f_Z(z) = f_Y(z) * f_X(z) $$
+$$f_Z(z) = f_Y(z) * f_X(z)$$
 
 **Covariance**:
 
 To compare two random variables to understand their relationship. Covariance measures its joint variability.
 
-$$ Cov(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y] $$
+$$Cov(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y]$$
 
 - Sign: $Cov(X,Y) > 0 $ shows the positive tendency in the linear relationship between $X$ and $Y$.
 
@@ -66,7 +69,7 @@ $$ Cov(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y] $$
 
 Measures the joint variability of two random variables, regardless of their mean.
 
-$$ Corr(X,Y) = E[XY]$$
+$$Corr(X,Y) = E[XY]$$
 
 ## 1.2. Modelling of memoryless processes
 
@@ -141,7 +144,7 @@ Adapting the operator to the image statistics.
 
 Discrete function that stores for each possible image value ($r_k$), the number of ocurrences of that value in the image ($n_k$).
 
-$$ h(r_k) = n_k \ \forall k \in \{0,1,...,L-1\}, \  n = \sum_{k=0}^{L-1} n_k $$
+$$h(r_k) = n_k \ \forall k \in \{0,1,...,L-1\}, \  n = \sum_{k=0}^{L-1} n_k$$
 
 - The normalizaed histogram is an estimation of the probability density function of a random variable associated to the image.
 
@@ -162,15 +165,15 @@ Images with a low contrast (small dynamic range) can be improved by equalizing t
 
 - Aim to produce a flat histogram of the output image $y$ (uniform distribution of the grey levels). So the probability density function of the random variable associated to the image is uniform.
 
-$$ f_Y(y) = 1 \implies \bigg | \frac{dg(x)}{dx} \bigg | =  f_X(x) \implies y = g(x) = \int_{-\infty}^x f_X(x) dx $$
+$$f_Y(y) = 1 \implies \bigg | \frac{dg(x)}{dx} \bigg | =  f_X(x) \implies y = g(x) = \int_{-\infty}^x f_X(x) dx$$
 
 Adapted to the continuous case:
 
-$$ s = T(r) = \int_{-\infty}^r f_X(x) dx \iff s_k = T(r_k) = \sum_{i=0}^{k-1} p(r_i) = \sum_{i=0}^{k} \frac{n_i}{n} $$
+$$s = T(r) = \int_{-\infty}^r f_X(x) dx \iff s_k = T(r_k) = \sum_{i=0}^{k-1} p(r_i) = \sum_{i=0}^{k} \frac{n_i}{n}$$
 
 after scaling the values to the range of the output image.
 
-$$ t_k = \texttt{round} ( (L-1) s_k ) $$
+$$t_k = \texttt{round} ( (L-1) s_k )$$
 
 Some colors may be lost in the process. The histogram equalization is not reversible.
 
@@ -186,7 +189,7 @@ A quantizer $q(x)$ performs a mapping $q: \mathbb{R} \rightarrow \mathbb{C}$.
 
 Therefor:
 
-$$ q(x) = \beta(\alpha(x)) $$
+$$q(x) = \beta(\alpha(x))$$
 
 **Mid-rise quantizer**:
 
@@ -204,13 +207,13 @@ $$\Delta_i = \frac{1}{L} i, \ L = 2^B-1, \ B = \#bits$$
 
 The difference between the original image and the quantized image.
 
-$$ e[n] = x[n] - q(x[n]) $$
+$$e[n] = x[n] - q(x[n])$$
 
 **Distortion measure**:
 
 $d(x, q(x))$ is a measure that quantifies the cost of substtituting the original value x by its representation q(x).
 
-$$ D(q) = E[d(X, q(X))] = \int_{-\infty}^{\infty} d(x, q(x)) f_X(x) dx = \sum_{i=0}^{L-1} \int_{\Delta_{i}}^{\Delta_{i-1}} d(x, y_i) f_X(x) dx $$
+$$D(q) = E[d(X, q(X))] = \int_{-\infty}^{\infty} d(x, q(x)) f_X(x) dx = \sum_{i=0}^{L-1} \int_{\Delta_{i}}^{\Delta_{i-1}} d(x, y_i) f_X(x) dx$$
 
 - **Mean square error**: average of the square of the difference between the original image and the quantized image. $ MSE = \frac{1}{N} \sum_{n=1}^N |e[n]|^2 $
 
@@ -230,21 +233,21 @@ A set of signals that can be analysed as a result of the same experiment, whose 
 
 **Mean**:
 
-$$ m_X[n] = E[X[n]] = \int_{-\infty}^{\infty} x f_X(x;n) dx $$
+$$m_X[n] = E[X[n]] = \int_{-\infty}^{\infty} x f_X(x;n) dx$$
 
 **Instantaneous power**: deterministic function that measures the average power mof the process at each time instant.
 
-$$ P_X[n] = E[X[n]^2]$$
+$$P_X[n] = E[X[n]^2]$$
 
 **Variance of a random process**: deterministic function that measures the variance of a process at each time instant.
 
-$$ \sigma_X[n]^2 = E[(X[n] - m_X[n])^2] = P_X[n] - m_X[n]^2 $$
+$$\sigma_X[n]^2 = E[(X[n] - m_X[n])^2] = P_X[n] - m_X[n]^2$$
 
 **Auto-correlation function**: deterministic 2D function that measures the correlation between two random variables defined at two samples
 
 $$r[n_1, n_2] = E[X[n_1] X[n_2]]$$
 
-$$ r_{XY}[n_1, n_2] = E[X[n_1]Y[n_2]] $$
+$$r_{XY}[n_1, n_2] = E[X[n_1]Y[n_2]]$$
 
 **Auto-covaariance function**:  deterministic 2D function that measures the similarity between two random variables defined at two samples
 
@@ -267,13 +270,13 @@ $$c_{XY}[n_1, n_2] = E[(X[n_1] - m_X[n_1]) (Y[n_2] - m_Y[n_2])]$$
 
 Given a stochastic process $X[n]$ and a linear filter $h[n]$:
 
-$$ Y[n] = \sum_{k=-\infty}^{\infty} h[k] X[n-k] $$
+$$Y[n] = \sum_{k=-\infty}^{\infty} h[k] X[n-k]$$
 
 the output process $Y[n]$ is a linear function of the input process $X[n]$ and a stochastic process as well.
 
 **Matrix notation**:
 
-$$ y[n] = h[n]^T \cdot x[n] $$
+$$y[n] = h[n]^T \cdot x[n]$$
 
 filter vector $h$ contains the $N$ coefficients of the filter.
 
@@ -304,7 +307,7 @@ The unbiased constrain is desirable and, among all unbiased estimators, that of 
 **Consistent**: An estimator is consistent if, as the number of samples increases, the resulting sequence
 of estimates converges to the true value of the parameter.
 
-$$ \lim_{N \to \infty} E[\hat{\theta}] = \theta, \ \lim_{N \to \infty} \sigma^2[\hat{\theta}] = 0 $$
+$$\lim_{N \to \infty} E[\hat{\theta}] = \theta, \ \lim_{N \to \infty} \sigma^2[\hat{\theta}] = 0$$
 
 **MSE**: If the estimator is biased, the dispersion of the estimations with respect to the actual value to be estimated ($\theta$) is not the variance but the Mean Square Error of the estimator MSE.
 
@@ -316,11 +319,11 @@ $$ \lim_{N \to \infty} E[\hat{\theta}] = \theta, \ \lim_{N \to \infty} \sigma^2[
 
 There exists a lower bound of the variance of the whole set of unbiased estimators of a parameter $\theta$.
 
-$$ \sigma^2[\hat{\theta}] \geq \frac{1}{I(\theta)} $$
+$$\sigma^2[\hat{\theta}] \geq \frac{1}{I(\theta)}$$
 
 where $I(\theta)$ is the Fisher information matrix.
 
-$$ \frac{\partial^2 \ln f(x_i;\theta)}{\partial \theta} = \kappa(\theta) (\hat{\theta} - \theta) $$
+$$\frac{\partial^2 \ln f(x_i;\theta)}{\partial \theta} = \kappa(\theta) (\hat{\theta} - \theta)$$
 
 The more informative the set of samples, the sharper the likelihood function $\ln f(x; \theta)$.
 
@@ -384,11 +387,11 @@ The Wiener-Hopf filter is the optimal linear filter for a stationary random proc
 
 The Wiener-Hopf filter minimizes the MSE between the desired signal and the output of the filter.
 
-$$ \min_{h} E[e[n]^2] = \min_{h} E[(d[n] - y[n])^2] = \min_{h} E[(d[n] - h^T x[n])^2] $$
+$$\min_{h} E[e[n]^2] = \min_{h} E[(d[n] - y[n])^2] = \min_{h} E[(d[n] - h^T x[n])^2]$$
 
 which implies that:
 
-$$ \nabla_h E[e[n]^2] = 0 \implies \nabla_h E[(d[n] - h^T x[n])^2] = 2E[(d[n]-h^T x[n]) \cdot (-x[n])] = E[e[n] x[n]] = 0 $$
+$$\nabla_h E[e[n]^2] = 0 \implies \nabla_h E[(d[n] - h^T x[n])^2] = 2E[(d[n]-h^T x[n]) \cdot (-x[n])] = E[e[n] x[n]] = 0$$
 
 and $x[n]$ and $d[n]$ with zero mean, with error orthogonal to the observations.
 
@@ -404,17 +407,17 @@ Under $h_{opt}$, the solution of the Wiener-Hopf equation:
 
 From $e[n]$ and $E[e[n]x[n]] = 0$ (or by differentiating $E[e[n]^2]$ with respect to $h$):
 
-$$ E[e[n] x[n]] = E[(d[n] - h^T x[n]) x[n]] = \\
+$$E[e[n] x[n]] = E[(d[n] - h^T x[n]) x[n]] = \\
 E[d[n] x[n]] - E[h^T x[n] x[n]] = \\
-r_{dx} - R_x h = 0 $$
+r_{dx} - R_x h = 0$$
 
 therefore:
 
-$$ h_{opt} = R_x^{-1} r_{dx} $$
+$$h_{opt} = R_x^{-1} r_{dx}$$
 
 For any filter, the MSE can be expressed as:
 
-$$ E[e[n]^2] = \epsilon + (h_{opt} - h)^T R_x (h_{opt} - h) $$
+$$E[e[n]^2] = \epsilon + (h_{opt} - h)^T R_x (h_{opt} - h)$$
 
 where $\epsilon = r_d[0] - r_{dx}^T h_{opt}$ is the variance of the error.
 
@@ -449,3 +452,70 @@ By quantizing: $e[n]_q = e[n] + \epsilon_q[n]$
 
 **Misadjustment**: The difference between the optimal filter and the adaptive filter.
 
+- An observation signal $x[n]$ with *low correlation* implies a *faster convergence*. The level curves tend to form a circle.
+- An observation signal $x[n]$ with *high correlation* implies a *slower convergence*. The level curves tend to form an ellipse.
+
+### Steepest descent algorithm
+
+$$
+\lim_{k \to \infty} \hat{h}[k] = h_{opt} \\
+\lim_{k \to \infty} E[e^2[k]] = \epsilon
+$$
+
+The steepest descent algorithm is the gradient descent algorithm for the MSE.
+
+$$
+\hat{h}[k+1] = \hat{h}[k] - \frac{1}{2} \mu \nabla_{\hat{h}} E[e^2[k]] \\
+$$
+
+where $\mu$ is the step size and determines the speed of convergence towards the optimum.
+
+The gradient of the error surface: $\nabla_{\hat{h}} E[e^2[k]] = -2 r_{dx} + 2 R_x \hat{h}[k]$
+
+$$
+\hat{h}[k+1] = \hat{h}[k] + \mu (r_{dx} - R_x \hat{h}[k])
+$$
+
+### Convergence analysis
+
+The convergence of the steepest descent algorithm depends on the eigenvalues of the correlation matrix $R_x$.
+
+- The correlation matrix $R_x$ is symmetric and semi-definite positive. $\lambda_i \geq 0$.
+
+Range of converegence: $\mu \in (0, \frac{2}{\lambda_{max}})$
+
+- $\mu = \frac{2}{\lambda_{max}}$: the algorithm converges in one iteration.
+
+$$
+\mu < \frac{2}{\lambda_{max}}, \\
+\lambda_{max} \leq \sum \lambda_i = \text{trace} (R_x)
+$$
+
+- The speed of convergence is proportional to the dispertionof the eigenvalues. $N_{iter} \propto \frac{\lambda_{max}}{\lambda_{min}}\ln{\delta}$
+  - Low eigenvalue dispertion $\implies$ fast convergence.
+  - High eigenvalue dispertion $\implies$ slow convergence.
+
+- Eigenvalue dispertion affects the speed of convergence but not the misadjustment.
+
+### LMS algorithm
+
+The LMS algorithm is a stochastic approximation of the steepest descent algorithm.
+
+$$
+\hat{h}[n+1] = \hat{h}[n] + \mu e[n] x[n]
+$$
+
+where $e[n] = d[n] - \hat{h}^T[n] x[n]$ is the instantaneous value of the error.
+
+- The gradient of the error surface is estimated by the instantaneous value of the error.
+
+- The correlation matrix $R_x$ is estimated by the instantaneous value of the observation vector.
+
+$$
+M \approx \frac{\mu}{2} \sum_{i=1}^{N} \lambda_i = \frac{\mu}{2} N r_x[0], \\
+\mu << \frac{2}{N r_x[0]}
+$$
+
+- The misadjustment is proportional to the step size $\mu$.
+
+- Increasing the power of the signal increases the misadjustment.

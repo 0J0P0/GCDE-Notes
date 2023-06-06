@@ -27,6 +27,7 @@
   - [Spark SQL](#spark-sql)
     - [Transformaciones](#transformaciones-1)
     - [Accesos con lenguaje SQL](#accesos-con-lenguaje-sql)
+  - [Cositas](#cositas)
 
 # Entornos de ejecución
 
@@ -35,6 +36,7 @@ Los entornos HPC se centran en acelerar al maximo el calculo de las aplicaciones
 - La eficiencia en el uso de la CPU pierde relevancia.
 - Enfoque en quitar el cuello de botella en la lectura de los datos. Para no detener el ritmo de la entrada y salida de los datos a la CPU. 
 - El particionado de los datos influye en el paralelismo y el tiempo de gestion.
+  - Los datos de entrada de una trasnformacion se particionan en bloques de datos y a cada particion se le crea una tarea.
 
 ## Paradigmas de la computacion
 
@@ -62,7 +64,8 @@ _Son modelos de computación..._
 **Escalabilidad horizontal**: Si se añaden nuevos nodos de cálculo/almacenamiento, el rendimiento
 debe mejorar de manera proporcional.
 
-**Tolerancia a fallos**: si un nodo cae, los datos deben seguir accesibles.
+**Tolerancia a fallos**: capacidad de un sistema de continuar funcionando
+cuando ocurre algún error. Si un nodo cae, los datos deben seguir accesibles.
 - tiempo medio sin fallos alto y tiempo medio de recuperacion bajo.
 
 # Cloud computing
@@ -95,7 +98,7 @@ _Son modelos de servicio de cloud computing..._
 ### Infrastuctura como servicio (IaaS)
 
 - Provee de recursos de computacion (CPU, memoria, almacenamiento, red) hardware.
-- El usuario es responsable de la gestion de los recursos.
+- El usuario es responsable de la gestion de los recursos. No controla el hardware ni el software ya instalado.
 
 ### Plataforma como servicio (PaaS)
 
@@ -117,6 +120,10 @@ _Son modelos de servicio de cloud computing..._
 - Ilusion de multiples sistemas dedicados sobre un unico sistema fisico.
 - Aislamiento de los recursos y facilita la tolerancia a fallos.
 - Facilidad de portabilidad.
+- Para facilitar la compartición de máquinas físicas
+- Para facilitar la asignación dinámica de recursos
+- Para facilitar la gestión de los entornos de ejecución (instalación y configuración de
+software)
 
 ## Emulacion
 
@@ -136,7 +143,16 @@ Se basa en replicar el espacio de direcciones de una aplicación, permitiendo qu
 
 # Modelos de programación y runtimes
 
-Se prioriza la escabilidad horizontal y la tolerancia a fallos sobre el alto rendimiento.
+**Apache Hadoop:**
+Apache Hadoop es un framework de software diseñado para el procesamiento distribuido de grandes volúmenes de datos en clústeres de servidores. Hadoop se basa en el concepto de MapReduce, que divide las tareas en etapas de mapeo y reducción para procesar datos en paralelo. Además, Hadoop proporciona un sistema de archivos distribuido llamado Hadoop Distributed File System (HDFS) que permite el almacenamiento distribuido y la replicación de datos en el clúster. Hadoop es especialmente útil para procesar datos estructurados y no estructurados y es adecuado para cargas de trabajo batch.
+
+**Apache Spark:**
+Apache Spark es un framework de procesamiento de datos de alto rendimiento y código abierto. A diferencia de Hadoop, que se basa principalmente en MapReduce, Spark utiliza un modelo de computación en memoria, lo que lo hace significativamente más rápido para ciertos tipos de operaciones. Spark ofrece una amplia gama de bibliotecas y herramientas para el procesamiento de datos en tiempo real, análisis de datos, aprendizaje automático (machine learning) y procesamiento de grafos. Spark puede integrarse con Hadoop y otros sistemas de almacenamiento, lo que le permite aprovechar datos de diversas fuentes.
+
+**Apache Cassandra:**
+Apache Cassandra es una base de datos distribuida escalable y de alto rendimiento diseñada para manejar grandes volúmenes de datos en múltiples servidores. Cassandra está diseñada para ser altamente tolerante a fallos y ofrece una arquitectura descentralizada en la que todos los nodos de la base de datos son iguales y no hay un punto único de fallo. Cassandra se basa en el modelo de almacenamiento de columnas y proporciona una alta disponibilidad y escalabilidad lineal. Es especialmente adecuada para aplicaciones que requieren alta velocidad de escritura y acceso a datos distribuidos en múltiples ubicaciones geográficas.
+
+- Se prioriza la escabilidad horizontal y la tolerancia a fallos sobre el alto rendimiento.
 
 ## MapReduce
 
@@ -163,7 +179,7 @@ El procesado de datos se divide en dos partes:
 
 - Para ejecutar aplicaciones MapReduce.
 - Tolerancia a fallos.
-- Integrado con el sistema de ficheros HDFS.
+- Integrado con el sistema de ficheros HDFS (Hadoop Distributed File System).
   - HDFS: sistema de ficheros distribuido que permite el acceso a los datos de manera eficiente.
   - fichero dividido en bloques del mismo tamaño.
   - Bloques replicados en varios nodos (slave).
@@ -180,6 +196,8 @@ El procesado de datos se divide en dos partes:
 - Procesar los datos en paralelo. (map task)
 - Ordenar los resultados parciales y se envian a las tareas de reduce como datos de entrada.
   - Los datos de entrada y salida estan organizados en parejas clave-valor.
+  - Es wide porque datos con la misma key pueden estar distribuidos por más de un
+nodo. 
 
 
 ```apache
@@ -205,7 +223,7 @@ reducer()
 
 ```python
 from pyspark import SparkContext
-sc = SparkContext("local", "Nombre") # para ejecucion local secuencial
+sc = SparkContext("local", "Nombre") # para ejecucion local secuencial --> el fichero se cargara a memoria
 sc = SparkContext("local[*]", "Nombre") # para ejecucion local paralela (usando los cores del nodo)
 sc = SparkContext("spark://master:7077", "Nombre") # para ejecucion distribuida (url del master)
 
@@ -216,16 +234,28 @@ sc = SparkContext(conf=conf)
 
 ### Transformaciones
 
+Una	transformación	toma	como	entrada	un	RDD	y	genera	como	resultado	uno	
+o	más	RDD.	Además	se evalúan	de	manera	“perezosa”,	no	se	ejecutan	hasta	
+que	el	planificador	se	encuentra	con	una	acción.
+
 **Narrow**: todos los datos necesarios para calcular los registros de una particion. Se pueden resolver de manera local.
 
 **Wide**: todos los datos necesarios para calcular los registros de una particion. Se necesitan datos de otras particiones.
 
 ### Acciones
 
-Genrean un resultado que se guarda en almacenamiento o se muestra en pantalla.
+Generan un resultado que se guarda en almacenamiento o se muestra en pantalla.
+
+Una	acción	trabaja	sobre	un	RDD	pero	la	salida	ya	no	es	otro	RDD	sino	que	
+puede ser,	por	ejemplo,	la	escritura	en	un	dispositivo	o	el	envío	de	un	resultado	
+al	driver de	la	aplicación
+
 - Dan por finalizada una secuencia de transformaciones y desencadenan su ejecucion.
 
 ## Task y etapas
+
+El runtime se encarga de implementar las operaciones de sincronización entre
+las tareas, no es necesario que el programador la invoque explícitamente.
 
 - *Logical execution plan*
 - Un grafo dirijiudo aciclico (DAG) de operaciones que se ejecutan en paralelo.
@@ -266,3 +296,7 @@ df.sort(df["nombre_columna"].desc()) # ordenar por columnas
 df.createOrReplaceTempView("nombre_tabla") # crear una vista temporal
 spark.sql("SELECT * FROM nombre_tabla") # ejecutar una consulta SQL
 ```
+
+## Cositas
+
+Un fichero .json tiene un conjunto de records. Cada record es un diccionario que es el dato de entrada de la transformacion.

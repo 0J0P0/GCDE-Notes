@@ -27,6 +27,7 @@
       - [Cloud of profiles $N\_I$ or $N\_J$](#cloud-of-profiles-n_i-or-n_j)
     - [Intertia](#intertia)
   - [Multiple Correspondence Analysis](#multiple-correspondence-analysis)
+    - [Studying individuals](#studying-individuals)
   - [Cluster Analysis](#cluster-analysis)
     - [Hierarchical clustering](#hierarchical-clustering)
       - [Single nearest neighbor](#single-nearest-neighbor)
@@ -93,23 +94,23 @@ where $Z$ is the matrix of principal  $(n\times p)$, $X^c$ is the centered data 
 
 The variance of the $i^{th}$ principal component is the $i^{th}$ eigenvalue of the covariance matrix $S$ from SD (spectral descomposition).
 
-$$ S = U D_{\lambda} U^T $$
+$$S = U D_{\lambda} U^T$$
 
 where $S$ is the covariance matrix of the centered data, $D_{\lambda}$ is the diagonal matrix of eigenvalues, and $U$ is the matrix of eigenvectors.
 
 This comes from the fact that,
 
-$$ \text{Var}(Z) = \frac{1}{n-1}Z^TZ = ... = D_{\lambda} $$
+$$\text{Var}(Z) = \frac{1}{n-1}Z^TZ = ... = D_{\lambda}$$
 
 (this can be obtained also from singular value decomposition (SVD) of the centered data matrix since there is no need for a square matrix).
 
 The total variance of the PC is the sum of the eigenvalues of the covariance matrix.
 
-$$ \text{Total var}(Z) = \sum_{i=1}^p \lambda_i = \sum_{i=1}^p s^2_{ii} = \text{trace}(S) $$
+$$\text{Total var}(Z) = \sum_{i=1}^p \lambda_i = \sum_{i=1}^p s^2_{ii} = \text{trace}(S)$$
 
 The proportion of variance explained by the $i^{th}$ principal component is the ratio of the $i^{th}$ eigenvalue to the sum of all the eigenvalues.
 
-$$ \frac{\lambda_i}{\sum_{i=1}^p \lambda_i} $$
+$$\frac{\lambda_i}{\sum_{i=1}^p \lambda_i}$$
 
 in order to decide the number of components to keep, we need to decide the proportion of variance we want to keep ($80\%$). This can be done by looking the magnitude of the eigenvalues or by the *scree plot*.
 
@@ -117,7 +118,7 @@ in order to decide the number of components to keep, we need to decide the propo
 
 The scree plot is a plot of the eigenvalues of the covariance matrix. The eigenvalues are plotted in descending order. 
 
-$$ P_j = \frac{\lambda_j}{\sum_{i=1}^p \lambda_i} $$
+$$P_j = \frac{\lambda_j}{\sum_{i=1}^p \lambda_i}$$
 
 The number of principal components to keep is the number of eigenvalues that are above the horizontal line. The horizontal line is the eigenvalue that is equal to the average of the eigenvalues.
 
@@ -144,13 +145,13 @@ Factor analysis is a statistical method used to describe variability among obser
 - The random error is assumed to be normally distributed.
 
 
-$$ X_i = a_{i1} F_1 + a_{i2} F_2 + ... + a_{ip} F_p + \epsilon_i $$
+$$X_i = a_{i1} F_1 + a_{i2} F_2 + ... + a_{ip} F_p + \epsilon_i$$
 
 where $X_i$ is the $i^{th}$ standardized observation of the $p$ variables, $F_1, F_2, ..., F_p$ are the $p$ uncorrelated factors (mean zero and unit variance), $a_{ij}$ are the factor loadings, and $\epsilon_i$ is the random error (zero mean).
 
-$$ \epsilon_i \sim N(0, \Sigma) $$
+$$\epsilon_i \sim N(0, \Sigma)$$
 
-$$ X = aF + \epsilon $$
+$$X = aF + \epsilon$$
 
 where $X$ is the matrix of observations $(n\times p)$, $F$ is the matrix of factors $(n\times p)$, $a$ is the matrix of factor loadings $(p\times p)$, and $\epsilon$ is the matrix of random error $(n\times p)$.
 
@@ -158,19 +159,19 @@ where $X$ is the matrix of observations $(n\times p)$, $F$ is the matrix of fact
 
 The variance of $X_i$ is the sum of the variances of the factors and the variances of the random error.
 
-$$ \text{Var}(X_i) = a_{i1}^2 \text{Var}(F_1) + a_{i2}^2 \text{Var}(F_2) + ... + a_{ip}^2 \text{Var}(F_p) + \text{Var}(\epsilon_i) $$
+$$\text{Var}(X_i) = a_{i1}^2 \text{Var}(F_1) + a_{i2}^2 \text{Var}(F_2) + ... + a_{ip}^2 \text{Var}(F_p) + \text{Var}(\epsilon_i)$$
 
 ### Fractor Analysis by using PCA
 
 If $m$ components are selected from the PCA, the random error term corresponds to the remaining $p-m$ components (linear combination).
 
-$$ X_i = u_{1i}Z_1 + u_{2i}Z_2 + ... + u_{mi}Z_m + \epsilon_i $$
+$$X_i = u_{1i}Z_1 + u_{2i}Z_2 + ... + u_{mi}Z_m + \epsilon_i$$
 
 where $Z_1, Z_2, ..., Z_m$ are the $m$ principal components (since the eigenvectors are orthonormal), and $u_{1i}, u_{2i}, ..., u_{mi}$ are the eigenvecotrs of the covariance matrix.
 
 To trasnform the PC to factors, we need to standarize the variables. So that 
 
-$$ a_{ij} = u_{ij}\sqrt{\lambda_j} \implies F_i = \frac{Z_i}{\sqrt{\lambda_i}} $$
+$$a_{ij} = u_{ij}\sqrt{\lambda_j} \implies F_i = \frac{Z_i}{\sqrt{\lambda_i}}$$
 
 where $\lambda_i$ is the $i^{th}$ eigenvalue of the covariance matrix.
 
@@ -178,7 +179,7 @@ where $\lambda_i$ is the $i^{th}$ eigenvalue of the covariance matrix.
 
 The communality is the proportion of the variance of the $i^{th}$ variable that is explained by the factors. The communality is the sum of the squared factor loadings.
 
-$$ c_i = \sum_{j=1}^p a_{ij}^2 $$
+$$c_i = \sum_{j=1}^p a_{ij}^2$$
 
 The higher the communality, the more the variable is explained by the factors.
 
@@ -205,14 +206,14 @@ Similarity and distance are inversevely related. The closer the points are, the 
 Similarity: $s(x, y)$
 
 - For categorical variables it can be defined as
-$$ s(x, y) = \alpha / k, \ \ \alpha = \sum 1_{x_i = y_i} $$
+$$s(x, y) = \alpha / k, \ \ \alpha = \sum 1_{x_i = y_i}$$
   - where $k$ is the number of categories.
 
 Distance: $d(x, y)$
 
-$$ d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y) $$
+$$d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y)$$
 
-**Similarity matrix**: $Q = X^TX$, where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - 11)X$ is used as a centered transformation of $X$.
+**Similarity matrix**: $Q = X^TX$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.
 
 since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element ($\cos(\alpha_{ij}) = 1$). If the elements are different, the dot product close to zero.
 
@@ -220,7 +221,7 @@ since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If bo
 
 Since the covariance matrix is a similarity matrix $q_{ij} = s_{ij}$, the distance matrix can be computed as
 
-$$ d_{ij}^2 = s_{ii} + s_{jj} - 2s_{ij} = \sum_{k=1}^p x_{ik}^2 + \sum_{k=1}^p x_{ik}^2 - 2\sum_{k=1}^p x_{ik}x_{jk} = \sum_{k=1}^p (x_{ik} - x_{jk})^2$$
+$$d_{ij}^2 = s_{ii} + s_{jj} - 2s_{ij} = \sum_{k=1}^p x_{ik}^2 + \sum_{k=1}^p x_{ik}^2 - 2\sum_{k=1}^p x_{ik}x_{jk} = \sum_{k=1}^p (x_{ik} - x_{jk})^2$$
 
 ### Algorithm
 
@@ -263,7 +264,7 @@ The null hypothesis is that the two categorical variables are independent.
 
 - Chi square test of independence
 
-$$ \chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(n f_{ij} - n f_{i.}f_{.j})^2}{n f_{i.}f_{.j}} = n \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(n f_{ij} - n f_{i.}f_{.j})^2}{n f_{i.}f_{.j}} = n \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
 
 - where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
 
@@ -287,12 +288,35 @@ The inertia is the sum of the squared distances between the points and the cente
 - The center of the cloud corresponds to the row/column with the most similar pattern to the median profile.
 - The farther the point in the cloud from the center, the less similar the profile is to the median profile.
 
-$$ Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I}^2 = \phi^2$$
+$$Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I}^2 = \phi^2$$
 
-$$ Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
+$$Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
 ## Multiple Correspondence Analysis
 
+To visualize relationships between categories of J number of qualitative variables for I number of individuals.
+
+**Indicator matrix**: Rows ansd columns representing all the levels for each categorical variable. 
+
+- $I_{ij} = 1$ if the individual $i$ is in the category $j$ of the qualitative variable.
+
+**Burt matrix**: Rows represent the categories of the qualitative variables and columns are dummy variables representing individuals.
+
+- $B_{ij}$ is the number of time the categorical pairs $i,j$ appear together.
+
+### Studying individuals
+
+The distance between two categories is measured based on the number of individuals they have in common.
+
+The fewer individuals they have in common, the further they are.
+
+$$
+d_{ij}^2 = C \sum_{k=1}^K \frac{(x_{ik}-x_{jk})^2}{I_k}
+$$
+
+- $C$ is a constant.
+- $I_k$ is the number of individuals in the category $k$.
+- $x_{ik}$ is 1 if the individual $i$ is in the category $k$ and 0 otherwise.
 
 ## Cluster Analysis
 
@@ -300,6 +324,8 @@ $$ Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_
 - To reduce dimensionality
 
 ### Hierarchical clustering
+
+- In hierarchical clustering, the clusters are organized as a tree. Denoted as a dendrogram.
 
 **Agglomeration**: Start with each individual in its own cluster and then merge clusters until all individuals are in the same cluster.
 - Close groups are merged first.
@@ -344,11 +370,11 @@ SS_B = \sum_{i=1}^{|C_2|} (x_i - \bar{x_B})^2
 $$
 
 $$
-SS_{A \cup B} = \sum_{i=1}^{|C_1| + |C_2|} (x_i - \bar{x_{A \cup B}})^2, \ \ \bar{x_{A \cup B}} = \frac{|C_1| \bar{x_A} + |C_2| \bar{x_B}}{|C_1| + |C_2|}
+SS_{A \cup B} = \sum_{i=1}^{|C_1| + |C_2|} (x_i - \bar{x}_{A \cup B})^2, \ \ \bar{x}_{A \cup B} = \frac{|C_1| \bar{x_A} + |C_2| \bar{x_B}}{|C_1| + |C_2|}
 $$
 
 $$
-\Delta = SS_{A \cup B} - (SS_A + SS_B) = ... = 
+\min \Delta = \min SS_{A \cup B} - (SS_A + SS_B)
 $$
 
 

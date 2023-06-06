@@ -8,6 +8,13 @@
   - [Feasible points](#feasible-points)
   - [KKT conditions](#kkt-conditions)
     - [Second order conditions](#second-order-conditions)
+  - [Duality](#duality)
+    - [Concavity](#concavity)
+    - [Weak duality theorem](#weak-duality-theorem)
+    - [Strong duality theorem](#strong-duality-theorem)
+    - [Wolfe duality theorem](#wolfe-duality-theorem)
+    - [Dual linear optimization](#dual-linear-optimization)
+    - [Dual quadratic optimization](#dual-quadratic-optimization)
 
 $$\min f(x) \\ s.t. \ \ \ h_i(x) = 0 \\  \ \ \  \ \ \  \ \ \ g_j(x) \leq 0$$
 
