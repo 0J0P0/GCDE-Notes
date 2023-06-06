@@ -435,7 +435,7 @@ Inicialización de los parámetros con kmeans++
 
 - Se busca minimizar el "error esperado" de clasificacion de manera similar a la regresion lineal.
 
-**Bayes classifier**: Clasificador optimo que minimiza el error esperado de clasificacion. Bajo la 0-1 loss, el clasificador bayesiano es el que asigna la clase más probable a cada observación.
+**Bayes classifier**: Clasificador optimo que minimiza el error esperado de clasificacion. Bajo la 0-1 loss, el clasificador bayesiano es el que asigna la clase más probable a cada observación. No es realizable a la práctica.
 
 Minimizar la perdida esperada prediciendo la clase para la cual se minimiza la perdida esperada.
 
@@ -447,7 +447,7 @@ $$
 
 **Discriminative**: Modela la distribucion condicional $p(y | x)$. Aprende la frontera de decision directamente en base a la minimizacion de la perdida esperada.
 
-**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos.
+**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos. Permite también generar nuevas muestras basadas en el modelo.
 
 - El umbral de decision se puede obtener a partir de la distribucion de los datos.
 - Complicado cuando no se conoce la distribucion de los datos o hay muy pocos datos.
@@ -488,6 +488,10 @@ $$
 - La frontera de decision es el conjunto de puntos $x$ tales que $g_k(x) = g_j(x)$.
 - Metodo lineal porque la frontera de decision es un hiperplano. Las fronteras son lineales.
 
+En ambos casos es fundamental escoger la forma de la matriz de covarianza (diagonal, isotrópica, etc). En el caso de LDA, si la matriz de covarianza es diagonal, entonces se usa una distáncia euclidea ponderada. 
+
+Se puede usar regularización añadiendo continuidad entre la matriz de covarianza conjunta (LDA) y la matriz de covarianza de cada clase (QDA). También evita problemas de singularidad.
+$$\hat\Sigma_k(\alpha)=\alpha\hat\Sigma_k+(1-\alpha)\hat\Sigma$$
 #### Naive Bayes
 
 - Modelo generativo.
@@ -497,7 +501,9 @@ $$
 p(x, y) = p(y) \prod_{j=1}^d p(x_j | y)
 $$
 
-En general no es cierto pero puede ser una buena aproximacion para muchos casos.
+En general no es cierto pero puede ser una buena aproximacion para muchos casos.Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
+
+Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con categorias con frecuencia 0 en la muestra.
 
 #### Perceptron
 
