@@ -72,7 +72,7 @@ The transformation is defined in such a way that the first principal component h
 
 5. Choose the most important components from the ones calculated in the previous step. This is done by choosing the components that have the highest eigenvalues. The number of components chosen depends on the amount of information that needs to be retained. The more components chosen, the more information is retained.
 
-6. Project the data onto the principal components. This is done by multiplying the centered data matrix by the eigenvectors.
+6. Project the data onto the principal components. This is done by multiplying the centered data matrix by the eigenvectors. We obtain the **scores**. 
 
 ### Theory of PCA
 
@@ -197,7 +197,7 @@ Oblique rotation is a method of transforming the factor loadings so that the fac
 
 ### What is Multidimensional Scaling?
 
-Multidimensional scaling (MDS) is a statistical technique for reducing the dimensionality of a data set by representing the data as points in a geometric space. The geometric space is defined by the distances between the points. 
+Multidimensional scaling (MDS) is a statistical technique for reducing the dimensionality of a data set by representing the data as points in a geometric space. The geometric space is defined by the distances between the points.  
 
 - Is a generalization of PCA. Instead of using the covariance matrix, it uses the similarity matrix.
 
@@ -213,7 +213,8 @@ Distance: $d(x, y)$
 
 $$d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y)$$
 
-**Similarity matrix**: $Q = X^TX$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.
+**Similarity matrix**: $Q = XX^T$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.  Note the difference between $Q=XX^T$ and $S=\frac{1}{n-1}X^TX$.
+
 
 since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element ($\cos(\alpha_{ij}) = 1$). If the elements are different, the dot product close to zero.
 
