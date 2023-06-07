@@ -372,6 +372,7 @@ The Wiener-Hopf filter is the optimal linear filter for a stationary random proc
 **System inversion**: estimate a system and apply its inverse to the signal.
 - Noisy observation signal $x[n]$.
 - Noise-free reference signal $d[n]$.
+- Train data to generate an inverse convolution of the system.
 
 **Signal prediction**
 - Observation and reference samples of the same noisy process.
