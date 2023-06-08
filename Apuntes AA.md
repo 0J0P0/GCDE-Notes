@@ -52,6 +52,9 @@
     - [Regression tree](#regression-tree)
       - [Gini](#gini)
     - [Random forest](#random-forest)
+  - [07](#07)
+    - [Boosting](#boosting)
+      - [AdaBoost](#adaboost)
 
 
 ## 01
@@ -620,3 +623,49 @@ Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeño
 
 **Desventajas**:
 - Muchos trees pueden dificultar la interpretacion.
+
+
+## 07
+
+### Boosting
+
+Boosting es un meta-algortimo de aprendizaje automatico que reduce el sesgo y la varianza de los estimadores base en un contexto de aprendizaje supervisado.
+
+- Tipo de algoritmo de ensamble.
+
+- Combinar varios clasificadores debiles (base) para obtener un clasificador fuerte. Combinación lineal ponderada de los clasificadores debiles en funcion de la exactitud de sus predicciones.
+
+#### AdaBoost
+
+$$
+H(x) = \hat{y} = \text{sign}(\sum_{t=1}^T \alpha_t h_t(x))
+$$
+
+- $h_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$.
+- $\alpha_t$ es el peso del clasificador debil de la iteracion $t$ (ponderacion de la exactitud de sus predicciones).
+- $T$ es el numero de iteraciones.
+
+Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
+
+```python
+# Inicializar pesos
+D_1 = [1/N, ..., 1/N] # N observaciones
+
+for t in range(T):
+    # Entrenar clasificador debil
+    h_t = train(X, y, D_t)
+    
+    # Calcular error
+    e_t = sum(D_t * (h_t != y)) / sum(D_t)
+    
+    # Calcular peso
+    alpha_t = 1/2 * log((1 - e_t) / e_t)
+    
+    # Actualizar pesos
+    # Z_t es un factor de normalizacion para que los pesos sumen 1 (sean una distribucion)
+    D_t+1 = D_t * exp(-alpha_t * y * h_t) / Z_t
+```
+
+**Desventajas:**
+- Sensible a ruido y outliers
+- Trabajo secuencial
