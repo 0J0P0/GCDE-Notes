@@ -50,6 +50,7 @@
     - [K-Nearest Neighbors](#k-nearest-neighbors)
   - [06](#06)
     - [Regression tree](#regression-tree)
+    - [Classification tree](#classification-tree)
       - [Gini](#gini)
     - [Random forest](#random-forest)
   - [07](#07)
@@ -581,22 +582,31 @@ Cuando los modelos base son independientes, el error del modelo ensamblado es me
 
 Particiona el espacio de variables de entrada en regiones rectangulares. Las predicciones son constantes en cada region, pueden ser calculadas como la media de los valores de entrenamiento en cada region.
 
+### Classification tree
+
 - Cada nodo interno es una pregunta sobre una caracteristica.
 - Cada rama es una respuesta a la pregunta.
-- Cada hoja es una predicción.
 - Cada hoja son predicciones constantes.
 
 Problema NP-completo. Se usa greedy search para encontrar una solución aproximada.
 
+Como definir el nodo inicial? 
+- Medir la pureza (nivel de mezcla de observaciones en diferentes clases). Gini, Entropia, etc.
+  - La pureza de un nodo es la suma ponderada de las impurezas de las hojas.
+  - La ponderacion es la fraccion de observaciones que pertenecen a cada hoja entre todas las observaciones del nodo.
+
+
 #### Gini
 
+El indice gini es una medida de impureza de una distribucion de probabilidad. 
+
 $$
-G = \sum_{k=1}^K \hat{p}_{k} (1 - \hat{p}_{k})
+G = \sum_{k=1}^K \hat{p}_{k} (1 - \hat{p}_{k}) = 1 - \sum_{k=1}^K \hat{p}_{k}^2
 $$
 
-Donde $\hat{p}_{k}$ es la fracción de observaciones de la clase $k$.
+Donde $\hat{p}_{k}$ es la fracción de observaciones que pertenecen a la clase $k$ en el nodo.
 
-- Entre mas pura la distribucion, menor el indice de gini. Pura hace referencia a que la distribucion es 0 o 1.
+- Entre mas pura la distribucion, menor el indice de gini.
 - Entre mas uniforme la distribucion, mayor el indice de gini.
 
 
