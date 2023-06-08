@@ -559,13 +559,14 @@ al haber escalado para tener norma euclidiana 1.
 
 Se usa la vecinada local para estimar la probabilidad de que una observación pertenezca a una clase.
 
-Para un nueva¡o ejemplo $x$
+Para un nuevo ejemplo $x$
 1. Calcular la distancia/similitud con todos los ejemplos del conjunto de entrenamiento.
 2. Seleccionar los $k$ ejemplos más cercanos.
 3. Emititr una prediccion con la combinacion de las clases de los $k$ ejemplos más cercanos.
 
 - Predicciones lentas sobretodo si tenemos un dataset grande.
 - Valores de k muy bajor pueden llevar a overfitting.
+  - Sensible a ruido y outliers.
 - Valores de k muy altos pueden llevar a underfitting.
 - Maldicion de dimensionalidad. A medida que aumenta la dimensionalidad, la distancia entre los puntos se vuelve cada vez más similar.
 - Estandarizar los datos es importante.
