@@ -54,7 +54,9 @@
     - [Random forest](#random-forest)
   - [07](#07)
     - [Boosting](#boosting)
-      - [AdaBoost](#adaboost)
+      - [AdaBoost classifier](#adaboost-classifier)
+      - [Boosting for regression](#boosting-for-regression)
+      - [Gradient boosting](#gradient-boosting)
 
 
 ## 01
@@ -635,7 +637,7 @@ Boosting es un meta-algortimo de aprendizaje automatico que reduce el sesgo y la
 
 - Combinar varios clasificadores debiles (base) para obtener un clasificador fuerte. Combinación lineal ponderada de los clasificadores debiles en funcion de la exactitud de sus predicciones.
 
-#### AdaBoost
+#### AdaBoost classifier
 
 $$
 H(x) = \hat{y} = \text{sign}(\sum_{t=1}^T \alpha_t h_t(x))
@@ -645,7 +647,9 @@ $$
 - $\alpha_t$ es el peso del clasificador debil de la iteracion $t$ (ponderacion de la exactitud de sus predicciones).
 - $T$ es el numero de iteraciones.
 
-Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
+Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior para corregirla. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
+
+- Los predictores lineales so Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
 
 ```python
 # Inicializar pesos
@@ -663,9 +667,74 @@ for t in range(T):
     
     # Actualizar pesos
     # Z_t es un factor de normalizacion para que los pesos sumen 1 (sean una distribucion)
-    D_t+1 = D_t * exp(-alpha_t * y * h_t) / Z_t
+    D_t+1 = D_t * exp(-alpha_t * y * h_t(X)) / Z_t
 ```
+
+- Una forma de entrenar el clasificador debil $h_t$ es formar los arboles de decision de cada feature y escoger el que tenga el menor Gini index.
+
+- Una forma de actualizar el conjunto de entrenamiento es seleccionar el mismo numero total de muestras $N$ del conjunto de entrenamiento original, pero con reemplazo. Las muestras que fueron seleccionadas varias veces tienen mayor peso $D_t$. Nuevamente se asignan pesos uniformes a las muestras.
 
 **Desventajas:**
 - Sensible a ruido y outliers
 - Trabajo secuencial
+
+
+#### Boosting for regression
+
+Encontrar una función $F(x)$ que minimice el error cuadratico medio. Tal que $F(x) \approx y$.
+
+- Modelo aditivo
+
+$$
+F(x) = \sum_{t=1}^T f_t(x)
+$$
+
+- $f_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$.
+
+Los residuos son las diferencias entre las predicciones y los valores reales.
+
+$$
+r_t = y - f_{t}(x)
+$$
+
+Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valore observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
+
+- Sofisticando los predictores base mediante una suma.
+
+
+```python	
+# Inicializar F_0
+f_0 = 0
+F_t = f_0
+for t in range(1, T):
+    # Generar algoritmo base nuevo
+    # beta_m = coeficiente del modelo base
+    (beta_m, gamma_m) = arg_min(sum(L(y, F_t(x) - beta * h(x, gamma))))
+
+    # Actualizar F_t
+    F_t = F_t + beta_m * h(x, gamma_m)
+```
+
+- Definir $L(.)$ y $h(.)$.
+- Típicamente $L(.)$ es el error cuadratico medio y $h(.)$ es un arbol de decision.
+
+
+#### Gradient boosting
+
+Gradient boosting es una generalizacion de boosting que permite optimizar cualquier funcion de perdida diferenciable.
+
+$$
+f_k := f_{k-1} + \gamma_k \nabla L(y, f_{k-1}(x))
+$$
+
+$$\nabla L(y, f_{k-1}(x)) = \frac{\partial L(y, f_{k-1}(x))}{\partial f_{k-1}(x)}$$
+
+- Suma de modelos: paralelismo entre gradient descent y boosting para regresion.
+- $\gamma_k$ es el learning rate. En este caso sera una exploracion lineal.
+
+
+En el caso de usar el error cuadratico medio como funcion de perdida, la derivada es:
+
+$$
+\nabla L(y, f_{k-1}(x)) = y - f_{k-1}(x)
+$$
