@@ -19,6 +19,7 @@
 - [Modelos de programación y runtimes](#modelos-de-programación-y-runtimes)
   - [MapReduce](#mapreduce)
   - [Apache Hadoop](#apache-hadoop)
+  - [Apache Spark](#apache-spark)
     - [Resilient Distributed Dataset (RDD)](#resilient-distributed-dataset-rdd)
     - [Inicializacion](#inicializacion)
     - [Transformaciones](#transformaciones)
@@ -27,6 +28,7 @@
   - [Spark SQL](#spark-sql)
     - [Transformaciones](#transformaciones-1)
     - [Accesos con lenguaje SQL](#accesos-con-lenguaje-sql)
+  - [Cassandra](#cassandra)
   - [Cositas](#cositas)
 
 # Entornos de ejecución
@@ -143,26 +145,17 @@ Se basa en replicar el espacio de direcciones de una aplicación, permitiendo qu
 
 # Modelos de programación y runtimes
 
-**Apache Hadoop:**
-Apache Hadoop es un framework de software diseñado para el procesamiento distribuido de grandes volúmenes de datos en clústeres de servidores. Hadoop se basa en el concepto de MapReduce, que divide las tareas en etapas de mapeo y reducción para procesar datos en paralelo. Además, Hadoop proporciona un sistema de archivos distribuido llamado Hadoop Distributed File System (HDFS) que permite el almacenamiento distribuido y la replicación de datos en el clúster. Hadoop es especialmente útil para procesar datos estructurados y no estructurados y es adecuado para cargas de trabajo batch.
-
-**Apache Spark:**
-Apache Spark es un framework de procesamiento de datos de alto rendimiento y código abierto. A diferencia de Hadoop, que se basa principalmente en MapReduce, Spark utiliza un modelo de computación en memoria, lo que lo hace significativamente más rápido para ciertos tipos de operaciones. Spark ofrece una amplia gama de bibliotecas y herramientas para el procesamiento de datos en tiempo real, análisis de datos, aprendizaje automático (machine learning) y procesamiento de grafos. Spark puede integrarse con Hadoop y otros sistemas de almacenamiento, lo que le permite aprovechar datos de diversas fuentes.
-
-**Apache Cassandra:**
-Apache Cassandra es una base de datos distribuida escalable y de alto rendimiento diseñada para manejar grandes volúmenes de datos en múltiples servidores. Cassandra está diseñada para ser altamente tolerante a fallos y ofrece una arquitectura descentralizada en la que todos los nodos de la base de datos son iguales y no hay un punto único de fallo. Cassandra se basa en el modelo de almacenamiento de columnas y proporciona una alta disponibilidad y escalabilidad lineal. Es especialmente adecuada para aplicaciones que requieren alta velocidad de escritura y acceso a datos distribuidos en múltiples ubicaciones geográficas.
-
 - Se prioriza la escabilidad horizontal y la tolerancia a fallos sobre el alto rendimiento.
 
 ## MapReduce
 
-**MapReduce**: modelo de programacion para procesar grandes volumenes de datos de manera distribuida y paralela.
+**MapReduce**: modelo de programacion para procesar grandes volumenes de datos independientes.
 - Mismos calculos sobre grupos independientes de datos.
 
 El procesado de datos se divide en dos partes:
 
-**Map**: procesa los datos de entrada y genera un conjunto de pares clave-valor intermedios.
-- resultado parcial identificadapor una clave que puede ser distinta a la clave de entrada.
+**Map**: procesa una porción de datos de entrada y genera un conjunto de pares clave-valor intermedios.
+- resultado parcial identificada por una clave que puede ser distinta a la clave de entrada.
 
 **Reduce**: combina todos los valores asociados a una misma clave intermedia y genera un conjunto de valores de salida.
 - resultado final identificado por una clave que puede ser distinta a la clave intermedia.
@@ -171,25 +164,24 @@ El procesado de datos se divide en dos partes:
 
 ## Apache Hadoop
 
-**Apache Hadoop**: framework de software que permite el procesamiento distribuido de grandes volumenes de datos a traves de clusters de ordenadores usando modelos de programacion simples.
+Apache Hadoop es un framework de software diseñado para el procesamiento distribuido de grandes volúmenes de datos en clústeres de servidores. Hadoop se basa en el concepto de MapReduce, que divide las tareas en etapas de mapeo y reducción para procesar datos en paralelo. Además, Hadoop proporciona un sistema de archivos distribuido llamado Hadoop Distributed File System (HDFS) que permite el almacenamiento distribuido y la replicación de datos en el clúster. Hadoop es especialmente útil para procesar datos estructurados y no estructurados y es adecuado para cargas de trabajo batch.
 
-*Driver* es el nodo master. (analiza el codigo y pide los recursos necesarios para ejecutarlo) (planifica las tasks y monitoriza la ejecucion para detectar y corregir errores).
+- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellode botella en el master.
 
-*Executors* son los slaves que se encargan de ejecutar las tasks.
-
-- Para ejecutar aplicaciones MapReduce.
+- Se ejecuta en contenedores.
 - Tolerancia a fallos.
 - Integrado con el sistema de ficheros HDFS (Hadoop Distributed File System).
   - HDFS: sistema de ficheros distribuido que permite el acceso a los datos de manera eficiente.
-  - fichero dividido en bloques del mismo tamaño.
-  - Bloques replicados en varios nodos (slave).
+  - fichero dividido en bloques del mismo tamaño (128MB).
+  - Bloques replicados en varios nodos para tolerancia a fallos. Muchas replicas --> mayor tolerancia a fallos pero mayor coste de almacenamiento y menor rendimiento.
   - Solo se pueden escribir una vez y solo se permite un escritor activo.
-- Arquitectura ideal: nodos con discos locales que hae tanto tareas de calculo como de gestion de datos.
+  - Ofrecen la vision de un único disco centralizado cuando en realidad la información está repartida entre varios nodos.
+  - Namenode (replicas para tolerancia a fallos): Actúa como máster y almacena todos los metadatos necesarios para construir el sistema de ficheros a partir de los datos que almacenan los datanodes, es decir, almacena la estructura de directorios y de ficheros y los metadatos necesarios para componer cada fichero a partir de sus bloques. La localización de los bloques en el clúster la almacena en memoria RAM, a partir de la información que le proporcionan los datanodes al arrancar el sistema de archivos.
+  - Datanode: Se pueden considerar esclavos, se limitan casi prácticamente a almacenar los bloques que componen cada fichero, así como, a proporcionarlos al namenode o a los clientes que lo solicitan.
 
 **Componentes**:
-- Master y slaves. Los slaves crean los contenedores para ejecutar los procesos.
-
-- Ofrece a los usuarios la vision de un solo disco centralizado cuando en realidad la informacion esta repartida entre varios nodos.
+- Master (Resource manager): uno por cada cluster. Recibe las peticiones de los clientes y organiza las tareas de procesamiento.
+- Slaves (Node manager). Los slaves crean los contenedores para ejecutar los procesos.
 
 **Pasos**:
 - Dividir los datos de entrada en proporciones independientes.
@@ -210,6 +202,14 @@ combiner()
 reducer()
 # la salida del map() o combiner() se ordena y particiona para mandarselos a los reducers.
 ```
+
+## Apache Spark
+
+Apache Spark es un framework de procesamiento de datos de alto rendimiento y código abierto. A diferencia de Hadoop, que se basa principalmente en MapReduce, Spark utiliza un modelo de computación en memoria, lo que lo hace significativamente más rápido para ciertos tipos de operaciones. Spark ofrece una amplia gama de bibliotecas y herramientas para el procesamiento de datos en tiempo real, análisis de datos, aprendizaje automático (machine learning) y procesamiento de grafos. Spark puede integrarse con Hadoop y otros sistemas de almacenamiento, lo que le permite aprovechar datos de diversas fuentes.
+
+- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellode botella en el master.
+
+- Driver (master): Analiza el codigo y pide los recursos necesarios. Asigna las tareas a los executors y monitoriza su ejecucion.
 
 ### Resilient Distributed Dataset (RDD)
 
@@ -296,6 +296,55 @@ df.sort(df["nombre_columna"].desc()) # ordenar por columnas
 df.createOrReplaceTempView("nombre_tabla") # crear una vista temporal
 spark.sql("SELECT * FROM nombre_tabla") # ejecutar una consulta SQL
 ```
+
+## Cassandra
+
+**Apache Cassandra:**
+Apache Cassandra es una base de datos distribuida escalable y de alto rendimiento diseñada para manejar grandes volúmenes de datos en múltiples servidores. Cassandra está diseñada para ser altamente tolerante a fallos y ofrece una arquitectura descentralizada en la que todos los nodos de la base de datos son iguales y no hay un punto único de fallo. Cassandra se basa en el modelo de almacenamiento de columnas y proporciona una alta disponibilidad y escalabilidad lineal. Es especialmente adecuada para aplicaciones que requieren alta velocidad de escritura y acceso a datos distribuidos en múltiples ubicaciones geográficas.
+
+- Tipo de arquitectura: Peer-to-peer. Cualquier nodo puede recibir peticiones de los clientes. El nodo que recibe se convierte en el coordinador de la petición.
+  - Redirige la parte de la petición correspondiente a cada nodo y espera a recibir las respuestas.
+
+- Base de datos NoSQL.
+
+**Ventajas:**
+- Tolerancia a fallos.
+- Soporte a datos no estructurados.
+- Querys en tiempo real.
+
+**Desventajas:**
+- No hay un lenguaje estandart.
+- Eficiencia de la query depende del modelo de datos. Dicta la forma del acceso a los datos.
+- Las consultas de JOIN son muy costosas, ya que las diferentes particiones estan en diferentes nodos.
+
+El particionado de datos pretende distribuir los datos de manera uniforme. La clave determina que nodo
+se encarga de guardar ese record. Se hace aplicando una función de hash a la clave y asignando el nodo
+que contiene el valor en su rango de tokens.
+
+Organizacion de los datos en dos niveles: keyspace y tablas.
+- Basada en la estructura clave-valor por columnas.
+  - La clave esta conformada por un conjunto de columnas que identifica las filas y el resto de columnas son los valores.
+- Primary key = clave: que identifica univocamente una fila. Puede estar compuesta de una partition key y multiples clustering keys.
+  - Partition key: parte de la clave que se usa para identificar el nodo que contiene la fila.
+  - Clustering key: parte de la clave que se usa para ordenar las filas dentro de una particion.
+- Particion: conjunto de filas que comparten la misma partition key.
+
+Es de interes:
+- Acceder al minimo numero de nodos para obtener los datos. Leer el minimo numero de particiones por query.
+- Distribucion de datos uniforme entre los nodos para maximizar el paralelismo.
+
+Esrategia de replicacion: SimpleStrategy o NetworkTopologyStrategy.	
+
+- SimpleStrategy: se replica en los siguientes nodos en el anillo.
+- NetworkTopologyStrategy: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
+
+CAP theorem: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
+- Consistencia: todos los nodos ven los mismos datos al mismo tiempo.
+- Disponibilidad (Availability): todos los nodos responden a las peticiones.
+- Tolerancia a particiones (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
+
+- Priozacion de AP. Se puede configurar la consistencia de las queries.
+
 
 ## Cositas
 
