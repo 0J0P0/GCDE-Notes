@@ -576,6 +576,7 @@ Cuando $k=1$, las regiones de decision corresponden a la union de celulas de vor
 ## 06 
 
 **Metodos de ensamble**: Combinar varios modelos para obtener un modelo más robusto.
+- Los modelos deben ser independientes.
 
 Cuando los modelos base son independientes, el error del modelo ensamblado es menor que el error de los modelos base.
 
@@ -596,6 +597,12 @@ Como definir el nodo inicial?
   - La pureza de un nodo es la suma ponderada de las impurezas de las hojas.
   - La ponderacion es la fraccion de observaciones que pertenecen a cada hoja entre todas las observaciones del nodo.
 
+$$
+x, x_0 = \argmin_{x, x_0} \frac{S_{x\leq x_0}}{S} Gini(S_{x\leq x_0}) + \frac{S_{x > x_0}}{S} Gini(S_{x > x_0})
+$$
+
+- x es la variable
+- $x_0$ es el punto de corte. (En el caso de variables categoricas, $x_0$ es una categoria)
 
 #### Gini
 
@@ -617,16 +624,32 @@ Para reducir la variancia de un estimador, se puede entrenar varios estimadores 
 
 **Bagging**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. Promediar las predicciones de los modelos base.
 - Hacer la predicciones mas robustas y mas precisas.
+- Ideal para cuando los modelos base tienen alta varianza
+
+- Las repericiones estan permitidas.
+- Las muestras que no han sido escogidas son puestas en un set de validacion OOB. (Out of bag)
+- El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
 
 Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging.
 
+Pseudo-codigo:
 
-- Ideal para cuando los modelos base tienen alta varianza
+```python
+# B boostrap samples (with replacement)
+T_b = []
+for b in range(B)
+  X_b, y_b = bootstrap(X, y)
 
-**Boosting**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. 
-- Las repericiones estan permitidas.
-- Las muestras que no han sido escogidas son puestas en un set de validacion OOB.
-- El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
+  # Train a decision tree on X_b, y_b. Each node by:
+    # Select m variables at random from X_b
+    # Pick best variable/split-point to split on (Gini/MSE)
+    # Split the node
+    # Repeat until the leaves are pure or until the leaves contain a minimum number of training examples
+  tree = DecisionTree()
+  tree.fit(X_b, y_b)
+
+  T_b.append(tree)
+````
 
 **Ventajas**:
 - No requiere validacion cruzada.
