@@ -141,7 +141,7 @@ No se puede calcular, porque  se modela sobre un conjunto de datos finito. Pero 
 
 #### Empirical Error
 
-(Training error)
+(Testing error)
 
 Asumiendo que los datos son independientes e idénticamente distribuidos (i.i.d.):
 
@@ -306,6 +306,8 @@ Asumiendo una distribución a priori Gaussiana, se obtiene la regresión de Ridg
 $$\hat{\theta}_{Ridge} = (X^T X + \lambda I)^{-1} X^T y$$
 
 Que minimiza la el cuadrado de la norma L2 de los parámetros y the sum of the squared error.
+
+- La funcion de regresion lineal es el mejor predictor posible, en el sentido que conseguiria sesgo cero y varianza minima.
 
 ### Lasso Regression
 
@@ -498,6 +500,7 @@ En ambos casos es fundamental escoger la forma de la matriz de covarianza (diago
 
 Se puede usar regularización añadiendo continuidad entre la matriz de covarianza conjunta (LDA) y la matriz de covarianza de cada clase (QDA). También evita problemas de singularidad.
 $$\hat\Sigma_k(\alpha)=\alpha\hat\Sigma_k+(1-\alpha)\hat\Sigma$$
+
 #### Naive Bayes
 
 - Modelo generativo.
@@ -507,7 +510,10 @@ $$
 p(x, y) = p(y) \prod_{j=1}^d p(x_j | y)
 $$
 
-En general no es cierto pero puede ser una buena aproximacion para muchos casos.Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
+En general no es cierto pero puede ser una buena aproximacion para muchos casos. Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
+
+- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos.
+- Si se asume Gaussianidad, entonces Bayes se aproxima a QDA con matriz de covarianza diagonal.
 
 Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con categorias con frecuencia 0 en la muestra.
 
@@ -635,9 +641,9 @@ Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeño
 Pseudo-codigo:
 
 ```python
-# B boostrap samples (with replacement)
 T_b = []
 for b in range(B)
+  # B boostrap samples (with replacement)
   X_b, y_b = bootstrap(X, y)
 
   # Train a decision tree on X_b, y_b. Each node by:
