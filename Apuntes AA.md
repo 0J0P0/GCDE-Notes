@@ -568,7 +568,7 @@ $$
 \frac{1}{\gamma^2}, \ \gamma = \min_{x} w^T x
 $$
 
-- $\gamma$ es la distancia del hiperplano a la clase más cercana. Similar a la distancia de Margen en SVM.
+- $\gamma$ es la distancia del hiperplano a la clase más cercana. Similar a la distancia de Margen en SVM. Aunque en SVM se maximiza el margen de separación.
 
 - **Ventajas:**
   - Simplicidad y eficiencia computacional. Especialmente para datos linealmente separables.
