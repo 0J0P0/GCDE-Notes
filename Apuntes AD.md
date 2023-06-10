@@ -1,5 +1,7 @@
 # AD - Data Analysis
 
+> If `pvalue < 0.05` then we reject the null hypothesis. If `pvalue > 0.05` then we accept the null hypothesis.
+
 - [AD - Data Analysis](#ad---data-analysis)
   - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
     - [What is PCA?](#what-is-pca)
@@ -35,6 +37,9 @@
       - [Average linkage](#average-linkage)
       - [Centroide distance](#centroide-distance)
       - [Ward's criterion](#wards-criterion)
+    - [Elbow method](#elbow-method)
+    - [Pseudo F index](#pseudo-f-index)
+    - [Silhouette index](#silhouette-index)
   - [Linear Discriminant Analysis](#linear-discriminant-analysis)
 
 
@@ -90,7 +95,7 @@ In matrix notation:
 
 $$Z = X^cU$$
 
-where $Z$ is the matrix of principal  $(n\times p)$, $X^c$ is the centered data matrix, and $U$ is the matrix of eigenvectors.
+where $Z$ is the matrix of principal $(n\times p)$, $X^c$ is the centered data matrix, and $U$ is the matrix of eigenvectors.
 
 The variance of the $i^{th}$ principal component is the $i^{th}$ eigenvalue of the covariance matrix $S$ from SD (spectral descomposition).
 
@@ -213,7 +218,7 @@ Distance: $d(x, y)$
 
 $$d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y)$$
 
-**Similarity matrix**: $Q = XX^T$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.  Note the difference between $Q=XX^T$ and $S=\frac{1}{n-1}X^TX$.
+**Similarity matrix**: $Q = XX^T$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.  Note the difference between $Q=XX^T$ and $S=\frac{1}{n}X^TX$.
 
 
 since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element ($\cos(\alpha_{ij}) = 1$). If the elements are different, the dot product close to zero.
@@ -261,26 +266,37 @@ Each cell $x_{ij}$ is the number of observations that fall into the $i^{th}$ row
 
 ### Test of independency
 
-The null hypothesis is that the two categorical variables are independent.
+The null hypothesis is that the rows and columns of the contengency table are independent (the two categorical variables are independent).
 
 - Chi square test of independence
 
-$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(n f_{ij} - n f_{i.}f_{.j})^2}{n f_{i.}f_{.j}} = n \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(f_{ij} - f_{i.}f_{.j})^2}{f_{i.}f_{.j}} = \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
 
 - where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
 
-- $\phi^2$ is called link. The deviation of the link is associated with the desviation of observed from expected values.
+- $\phi^2$ is called link. The desviation of the link is associated with the desviation of observed from expected values (under independence).
+
+  - When independence, the profiles are the same as the mean profiles.
+  - The cloud has 0 inertia.
+  - The further the data from independence, the higher the inertia and the more the profiles spread from the mean profiles.
 
 ### Profiles
 
 Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$.
 
+- **Row profile** shows the distribution of the row variable across the different categories of the column variable
+
+- The **average profile** $G_I$ is the average of the row profiles. It is the center of the cloud of row profiles.
+
 #### Cloud of profiles $N_I$ or $N_J$
 
 The bigger the distance, the higher variance between the point of the plots.
 
-**Distance**: $d_{i,l}^2 = \sum_{j=1}^J \frac{1}{f_{.j}} (\frac{f_{ij}}{fi.} - \frac{f_{lj}}{f_{l.}})^2$
+**Distance**:
 
+$d_{i,l}^2 = \sum_{j=1}^J \frac{1}{f_{.j}} (\frac{f_{ij}}{fi.} - \frac{f_{lj}}{f_{l.}})^2$ (row profiles)
+
+$d_{j,l}^2 = \sum_{i=1}^I \frac{1}{f_{i.}} (\frac{f_{ij}}{f_{.j}} - \frac{f_{il}}{f_{.l}})^2$ (column profiles)
 
 ### Intertia
 
@@ -293,17 +309,35 @@ $$Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I
 
 $$Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
+```r
+res.ca <- CA(df)
+# Eigenvalues
+res.ca$eig 
+# Row profiles
+res.ca$row
+# Coordinates of the row profiles
+res.ca$row$coord
+
+# Cloud of row profiles
+plot.CA(res.ca, choix = "row", invisible = "col")
+```
+
 ## Multiple Correspondence Analysis
 
 To visualize relationships between categories of J number of qualitative variables for I number of individuals.
 
-**Indicator matrix**: Rows ansd columns representing all the levels for each categorical variable. 
+**Indicator matrix**: Rows represent individuals and columns represent dummy variables for each category of the qualitative variables.
 
 - $I_{ij} = 1$ if the individual $i$ is in the category $j$ of the qualitative variable.
 
-**Burt matrix**: Rows represent the categories of the qualitative variables and columns are dummy variables representing individuals.
+**Burt matrix**: Rows represent categories of the qualitative variables and columns represent categories of the qualitative variables. All possible pairs of categories.
 
 - $B_{ij}$ is the number of time the categorical pairs $i,j$ appear together.
+- Symmetric matrix.
+
+$$
+\lambda^{B} = (\lambda^{I})^2
+$$
 
 ### Studying individuals
 
@@ -378,6 +412,76 @@ $$
 \min \Delta = \min SS_{A \cup B} - (SS_A + SS_B)
 $$
 
+```r
+?hclust # hiercal clustering
+fit <- hclust(d, method="single") 
+plot(fit,main="Dendrogram of Single Linkage") # Dendogram
+```
+
+### Elbow method
+
+- To determine the number of clusters.
+- Total within sum of squares (TWSS) per number of clusters.
+- The optimal number of clusters is the number of clusters after which the TWSS starts to decrease in a linear fashion.
+
+```r
+k4$withinss
+# SSQ within each cluster
+k4$totss
+# SSQ total
+k4$tot.withinss
+# Total SSQ within clusters
+k4$betweenss + k4$tot.withinss
+# SSQ total
+```
+
+### Pseudo F index
+
+Defines the ratio of between cluster sum of squares (BSS) to the within cluster sum of squares (WSS)
+
+$$
+F = \frac{BSS/(K-1)}{WSS/(N-K)}
+$$
+
+- $K$ is the number of clusters.
+- $N$ is the number of individuals.
+
+```r	
+aux<-c()
+for (i in 2:10){
+  k<-kmeans(usa[,-5],centers=i,nstart=25)
+  aux[i]<-((k$betweenss)*(nrow(usa)-i))/((k$tot.withinss)*(i-1))
+}
+plot(aux, xlab="Number of Clusters", ylab="Pseudo-F", type="l", main="Pseudo F Index")
+which.max(aux) # max value is selected
+```
+
+### Silhouette index
+
+The Silhouette index is a measure used to assess the quality of clustering in data analysis.
+
+Measures the closeness of each point in a cluster to the points in the other clusters.
+
+The Silhouette index is calculated for each data point and ranges from -1 to 1. A higher value indicates that the data point is well-matched to its own cluster and poorly-matched to neighboring clusters, while a lower value suggests that the data point may be assigned to the wrong cluster.
+
+The number of clusters that maximizes the Silhoutte index is chosen as the optimum number of clusters.
+
+- For each data point, calculate two distances:
+  - a) Average distance to all other data points in the same cluster (cohesion).
+  - b) Average distance to all data points in the nearest neighboring cluster (separation).
+
+- Compute the silhouette coefficient for each data point using the formula:
+silhouette coefficient = (separation - cohesion) / max(separation, cohesion)
+
+- Calculate the average silhouette coefficient across all data points to obtain the Silhouette index for the clustering algorithm.
+
+```r
+res <- fastkmed(d, 6)
+# Depending on the number of clusters, the silhouette index may be different. The distances may be different.
+silhouette <- sil(d, res$medoid, res$cluster)
+silhouette$result
+silhouette$plot
+```
 
 ## Linear Discriminant Analysis
 
