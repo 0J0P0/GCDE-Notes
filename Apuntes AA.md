@@ -602,7 +602,7 @@ Para reducir la variancia de un estimador, se puede entrenar varios estimadores 
 **Bagging**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. Promediar las predicciones de los modelos base.
 - Hacer la predicciones mas robustas y mas precisas.
 
-Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging.
+Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging. En el caso de Random Forest también se usa un subconjunto diferente de las features en cada split/nodo de los arboles.
 
 
 - Ideal para cuando los modelos base tienen alta varianza
@@ -613,7 +613,7 @@ Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeño
 - El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
 
 **Ventajas**:
-- No requiere validacion cruzada.
+- No requiere validacion cruzada (OBB error rate)
 - No requiere estandarizacion de los datos.
 - Facil paralelizacion.
 - Metodos para problemas de clasificacion desbalanceados.
