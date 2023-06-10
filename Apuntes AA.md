@@ -721,8 +721,6 @@ $$
 
 Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior para corregirla. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
 
-- Los predictores lineales so Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
-
 ```python
 # Inicializar pesos
 D_1 = [1/N, ..., 1/N] # N observaciones
@@ -743,6 +741,7 @@ for t in range(T):
 ```
 
 - Una forma de entrenar el clasificador debil $h_t$ es formar los arboles de decision de cada feature y escoger el que tenga el menor Gini index.
+  - Los predictores lineales son Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
 
 - Una forma de actualizar el conjunto de entrenamiento es seleccionar el mismo numero total de muestras $N$ del conjunto de entrenamiento original, pero con reemplazo. Las muestras que fueron seleccionadas varias veces tienen mayor peso $D_t$. Nuevamente se asignan pesos uniformes a las muestras.
 
