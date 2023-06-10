@@ -451,14 +451,29 @@ $$
 \hat{y} = \argmin_y E[L(y, y')] = \argmin_y \sum_{y'} L(y, y') p(y' | x) = \argmax_y p(y | x)
 $$
 
+- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos.
+- Si se asume Gaussianidad, entonces Bayes se aproxima a QDA con matriz de covarianza diagonal.
+
 ### Discriminative vs Generative
 
 **Discriminative**: Modela la distribucion condicional $p(y | x)$. Aprende la frontera de decision directamente en base a la minimizacion de la perdida esperada.
 
-**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos. Permite también generar nuevas muestras basadas en el modelo.
+- **Ventajas:**
+  - No hay necesidad de conocer la distribucion de los datos.
 
-- El umbral de decision se puede obtener a partir de la distribucion de los datos.
+- **Desventajas:**
+  - Incapas de generar nuevas muestras.
+
+**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos.
+
 - Complicado cuando no se conoce la distribucion de los datos o hay muy pocos datos.
+- **Ventajas:**
+  - Capacidad de generar nuevas muestras.  Permite también generar nuevas muestras basadas en el modelo ya que se conoce la distribucion de los datos.
+  - Capturan la estructura de los datos al modelar la distribucion conjunta.
+
+- **Desventajas:**
+  - Mayor complejidad computacional.
+  - Mayor dependencia de los datos de entrenamiento. Se requiere un conjunto de entrenamiento más grande para obtener buenos resultados.
 
 #### LDA/QDA
 
@@ -473,7 +488,7 @@ $$
 Si se asume que las distribuciones a priori son $p(y = k) = \pi_k$, entonces la funcion discriminante es:
 
 $$
-g_k(x) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k) + C
+g_k(x) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1}_k (x - \mu_k) + C
 $$
 
 El primer termino es el logaritmo de la probabilidad a priori de la clase $k$.
@@ -483,7 +498,7 @@ El segundo termino es la distancia de Mahalanobis entre el punto $x$ y el centro
 - La frontera de decision es el conjunto de puntos $x$ tales que $g_k(x) = g_j(x)$.
 
 - La funcion $g_k$ es la funcion cuadratica discriminiante (QDA) y el clasificador correspondiente es implemnetado prediciendo la clase $k$ para la cual $g_k(x)$ es maxima.
-- Que corresponde a escger la clase con una probibilidad a posteriori maxima.
+- Que corresponde a escoger la clase con una probibilidad a posteriori maxima.
 
 - Fronteras de desicion cuadraticas, porque la frontera de decision es un paraboloide.
 
@@ -512,18 +527,16 @@ $$
 
 En general no es cierto pero puede ser una buena aproximacion para muchos casos. Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
 
-- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos.
-- Si se asume Gaussianidad, entonces Bayes se aproxima a QDA con matriz de covarianza diagonal.
-
 Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con categorias con frecuencia 0 en la muestra.
 
 #### Perceptron
 
 - Modelo discriminativo.
 - No probabilistico para datos linealmente separables.
+- Algoritmo online. Actualiza los pesos en cada iteracion. Recibe una observacion de training a la vez y actualiza los pesos en base a la observacion.
 
 $$
-y = \text{sign}(\sum_{j=1}^d w_j x_j) = \text{sign}(w^T x) = \begin{cases}
+\hat{y} = \text{sign}(\sum_{j=1}^d w_j x_j) = \text{sign}(w^T x) = \begin{cases}
 1 & \text{si } w^T x > 0 \\
 -1 & \text{si } w^T x \leq 0
 \end{cases}
@@ -534,14 +547,14 @@ w = 0
 while not converged:
     for i in range(N):
         # predicts positive class if w^T x_i > 0
+        # predicts negative class if w^T x_i <= 0
 
-        # else, on a mistake:
-        if y_i * w^T x_i <= 0:
-            w = w + y_i * x_i
-            # update w on positive or negative mistake (depending on y_i)
+        # else, on a mistake (y_i != y_hat_i)
+          w = w + y_i * x_i
+          # update w on positive or negative mistake (depending on y_i)
 ```
 
-La actualizacion de $w$ en ambos casos se hacerca en 1 a la solucion optima.
+La actualizacion de $w$ en ambos casos se acerca en 1 a la solucion optima.
 
 $$
 w_{t+1}^T x_i = w_t^T x_i + y_i x_i^T x_i = w_t^T x_i + y_i ||x_i||^2 = w_t^T x_i + y_i
@@ -549,7 +562,26 @@ $$
 
 al haber escalado para tener norma euclidiana 1.
 
-- Un amejor alternativa es usar la funcion *sigmoid* (mapea a [0,1] para que el resultado pueda ser interpretado como probabilidad) o *logistic*, que es una version suavizada de la funcion signo.
+El numero de errores que comete Perceptron es acotado por:
+
+$$
+\frac{1}{\gamma^2}, \ \gamma = \min_{x} w^T x
+$$
+
+- $\gamma$ es la distancia del hiperplano a la clase más cercana. Similar a la distancia de Margen en SVM.
+
+- **Ventajas:**
+  - Simplicidad y eficiencia computacional. Especialmente para datos linealmente separables.
+  - Interpretacion intuitiva de los pesos. Explica la importancia de cada variable.
+
+- **Desventajas:**
+  - No probabilistico. No se puede interpretar la salida como una probabilidad.
+  - No es robusto a outliers.
+  - No es robusto a datos no linealmente separables.
+  - No es robusto a datos con clases desbalanceadas.
+
+
+Una mejor alternativa es usar la funcion *sigmoid* (mapea a $[0,1]$ para que el resultado pueda ser interpretado como probabilidad) o *logistic*, que es una version suavizada de la funcion signo.
 
 #### Logistic Regression
 
