@@ -244,8 +244,6 @@ Recompute $X$ from $D$ and $Q$.
 
 Correspondence analysis is a statistical technique for displaying the rows and columns of a contingency table in a low-dimensional space. The rows and columns are represented as points in a geometric space. The geometric space is defined by the correspondence between the rows and columns.
 
-- Not to check the independence between the rows and columns (that can be done with a $\chi^2$ test).
-
 - To understand relationships between categorical variables.
   - Visualize associations between categorical variables.
 - Understand the contingency table as a data matrix.
@@ -270,7 +268,7 @@ The null hypothesis is that the rows and columns of the contengency table are in
 
 - Chi square test of independence
 
-$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(f_{ij} - f_{i.}f_{.j})^2}{f_{i.}f_{.j}} = \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(f_{ij} - f_{i.}f_{.j})^2}{f_{i.}f_{.j}} = n\phi^2 \sim \chi^2_{(I-1)(J-1)}$$
 
 - where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
 
@@ -302,22 +300,25 @@ $d_{j,l}^2 = \sum_{i=1}^I \frac{1}{f_{i.}} (\frac{f_{ij}}{f_{.j}} - \frac{f_{il}
 
 The inertia is the sum of the squared distances between the points and the center of the cloud of points $G_I$.
 
-- The center of the cloud corresponds to the row/column with the most similar pattern to the median profile.
 - The farther the point in the cloud from the center, the less similar the profile is to the median profile.
 
 $$Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I}^2 = \phi^2$$
 
 $$Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
+$$
+\sum_{k=1}^K \lambda_k = Inertia(N_I/G_I) = Inertia(N_J/G_J) = \phi^2
+$$
+
 ```r
 res.ca <- CA(df)
+
 # Eigenvalues
 res.ca$eig 
 # Row profiles
 res.ca$row
 # Coordinates of the row profiles
 res.ca$row$coord
-
 # Cloud of row profiles
 plot.CA(res.ca, choix = "row", invisible = "col")
 ```
