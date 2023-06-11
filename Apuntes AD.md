@@ -486,10 +486,12 @@ silhouette$plot
 
 ## Linear Discriminant Analysis
 
-- The difference with clustering is that we know how many groups we want to find. We want to find the best linear combination of variables that separates the groups.
+- The difference with clustering is that in LDA we know how many groups we want to find. We want to find the best linear combination of variables that separates the groups.
+
+- To classify individuals into groups by a linear combination of quantitative variables.
 
 **Assumptions**:
-- The distribution of a quantitative variable is normal in each category k: $X_k \sim N(\mu_k, \Sigma_k)$
+- The distribution of a quantitative variable is normal in each category $k$: $X_k \sim N(\mu_k, \Sigma_k)$
 - The covariance matrices are equal: $\Sigma_1 = \Sigma_2 = ... = \Sigma_k = \Sigma$
 
 The exponent of the multivariate normal distribution is:
@@ -500,18 +502,22 @@ $$
 
 which refers to the Mahalanobis distance between the observation and the mean of the category k.
 
-- The bigger the Mahalanobis distance $D_k$, the less likely the observation belongs to the category k.
+- The bigger the Mahalanobis distance $D_k$, the less likely the observation belongs to the category $k$. This is because the observation is far from the mean of the category $k$.
+
+**ML estimators:**
+- $\hat{\mu}_k = \frac{1}{n} \sum_{i=1}^n x_i$
+- $\hat{\Sigma}_k = \frac{1}{n} \sum_{i=1}^n (x_i - \hat{\mu}_k)(x_i - \hat{\mu}_k)^T$
 
 The probability function that an observation comes from a given category is:
 
 $$
-P(X = x | Y = k) = \frac{1}{(2 \pi)^{p/2} |\Sigma|^{1/2}} e^{-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)}
+f_k(x) = P(X = x | Y = k) = \frac{1}{(2 \pi)^{p/2} |\Sigma|^{1/2}} e^{-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)}
 $$
 
-Using Bayes' theorem, the probability that an observation belongs to a given category is:
+Using Bayes' theorem, the probability that an observation belongs to a given category is (posterior probability):
 
 $$
-P(Y = k | X = x) = \frac{P(X = x | Y = k) P(Y = k)}{P(X = x)}
+P(Y = k | X = x) = \frac{P(X = x | Y = k) P(Y = k)}{P(X = x)} = \frac{f_k(x) \pi_k}{\sum_{l=1}^K f_l(x) \pi_l}
 $$
 
 where $P(Y = k)$ is the prior probability of category k and $P(X = x)$ is the marginal probability of the observation, which is the sum of $P(X = x | Y = k) P(Y = k)$ over all categories.
@@ -519,10 +525,12 @@ where $P(Y = k)$ is the prior probability of category k and $P(X = x)$ is the ma
 For two categories, the probability that an observation belongs to category 1 is:
 
 $$
-P(Y = 1 | X = x) = \frac{1}{1 + \frac{\pi_1}{\pi_2} e^{-\frac{1}{2}(D_1^2 - D_2^2)}}
+P(Y = 1 | X = x) = \frac{f_1(x) \pi_1}{f_1(x) \pi_1 + f_2(x) \pi_2} = \frac{1}{1 + \frac{\pi_1}{\pi_2} e^{-\frac{1}{2}(D_2^2 - D_1^2)}}
 $$
 
-- The greater the distance $D_1$ and the smaller the distance $D_2$, the greter the denominator and the greater the probability that the observation belongs to category 2. The opposite is true for category 1. Assuming that $\frac{\pi_1}{\pi_2} = 1$.
+- The greater the distance $D_1$ with respect to $D_2$, the greater the denominator and the greater the probability that the observation belongs to category 2. The opposite is true for category 1. Assuming that $\frac{\pi_1}{\pi_2} = 1$.
+
+- Similarly, if $\pi_1 f_1(x) < \pi_2 f_2(x)$, then the observation is more likely to belong to category 2. The opposite is true for category 1.
 
 The maximization of this probability is equivalent to the minimization of the Mahalanobis distance and leads to the Bayes classifier.
 
@@ -535,3 +543,23 @@ $$
 where $\hat{\mu_k}$ is the mean of the observations in category k and $s_k^2$ is the variance of the observations in category k.
 
 The misclassifications are denoted by $P(1|2)$ and $P(2|1)$ in the case of two categories. Maximizing the ratio of the between-group variance to the within-group variance is equivalent to minimizing the misclassification rate.
+
+**Classification Rule**
+
+$$
+\delta_k(x) = x^T \Sigma^{-1} \mu_k - \frac{1}{2} \mu_k^T \Sigma^{-1} \mu_k + \log(\pi_k), \ \ \delta_k(x) \approx \log(\pi_k f_k(x))
+$$
+
+- The observation is assigned to the category k for which $\delta_k(x)$ is the largest.
+
+**Correct classification rate**
+
+|          | Predicted 1 | Predicted 2 |
+| -------- | ----------- | ----------- |
+| Actual 1 | $n_{11}$    | $n_{12}$    |
+| Actual 2 | $n_{21}$    | $n_{22}$    |
+
+
+$$
+CRR = \frac{n_{11} + n_{22}}{n_{11} + n_{12} + n_{21} + n_{22}}
+$$
