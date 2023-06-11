@@ -573,3 +573,9 @@ skullda<-lda(type~., data=skulls)
 
 # The number of discriminant functions is equal to the number of groups minus one. The number of groups is equal to the number of levels of the response variable.
 ```
+
+```r	
+# Prediction Accuracy p1^2+p^2
+pa<-skullda$prior[1]^2 + skullda$prior[2]^2
+# Prediction Accuracy should be greater than 1/levels of the response variable. This would mean that the model is better than random guessing.
+```
