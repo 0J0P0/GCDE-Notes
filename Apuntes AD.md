@@ -2,6 +2,11 @@
 
 > If `pvalue < 0.05` then we reject the null hypothesis. If `pvalue > 0.05` then we accept the null hypothesis.
 
+> Covariance matrix $S = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})(x_i - \bar{x})^T$ (square and symmetric matrix). Or $S = \frac{1}{n} X^T P X$ where $P$ is the centering matrix.
+> When dividing by $n-1$ instead of $n$ we get an unbiased estimator of the covariance matrix.
+
+> Standarisazion of variables implies that the covariance matrix is the correlation matrix.
+
 - [AD - Data Analysis](#ad---data-analysis)
   - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
     - [What is PCA?](#what-is-pca)
@@ -71,7 +76,7 @@ The transformation is defined in such a way that the first principal component h
 
 2. Center the data. This is done by subtracting the mean of each variable from each observation of that variable. This is done to make sure that the variables are centered around zero.
 
-3. Calculate the covariance matrix $S$. This is done by multiplying the centered data matrix by its transpose. The covariance matrix is a square matrix with the number of rows and columns equal to the number of variables.
+3. Calculate the covariance matrix $S$. This is done by multiplying the centered data matrix by its transpose and dividing by the number of observations. The covariance matrix is a square matrix with the variances of the variables along the diagonal and the covariances between each pair of variables in the off-diagonal elements.
 
 4. Calculate the eigenvectors and eigenvalues of the covariance matrix. The eigenvectors are the principal components. The eigenvalues are the variances of the principal components.
 
