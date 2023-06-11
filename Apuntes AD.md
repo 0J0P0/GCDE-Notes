@@ -563,3 +563,13 @@ $$
 $$
 CRR = \frac{n_{11} + n_{22}}{n_{11} + n_{12} + n_{21} + n_{22}}
 $$
+
+```r	
+skullda<-lda(type~., data=skulls)
+# Prior probabilities initially computed from the sample sizes.
+
+# The group means of the variables are the centroids of the groups.
+# The greater the difference between the group means of each variable, the greater the difference and the better the separation of the groups with respect to that variable.
+
+# The number of discriminant functions is equal to the number of groups minus one. The number of groups is equal to the number of levels of the response variable.
+```
