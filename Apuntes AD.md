@@ -47,6 +47,9 @@
     - [Elbow method](#elbow-method)
     - [Pseudo F index](#pseudo-f-index)
     - [Silhouette index](#silhouette-index)
+    - [Non-hieriarchical clustering](#non-hieriarchical-clustering)
+      - [K-means](#k-means)
+      - [Model-based](#model-based)
   - [Linear Discriminant Analysis](#linear-discriminant-analysis)
     - [LDA vs PCA](#lda-vs-pca)
 
@@ -445,6 +448,8 @@ $$
 \min \Delta = \min SS_{A \cup B} - (SS_A + SS_B)
 $$
 
+
+Note that the single and complete linkage are sensitive too outliers and Ward's criterion tends to form equally sized clusters.
 ```r
 ?hclust # hiercal clustering
 fit <- hclust(d, method="single") 
@@ -515,6 +520,20 @@ silhouette <- sil(d, res$medoid, res$cluster)
 silhouette$result
 silhouette$plot
 ```
+### Non-hieriarchical clustering
+#### K-means
+Algorithm:
+1. Choose a value K  
+2. Partition all items into an initial set of K clusters
+3. Compute the center of each cluster
+4. Assign each item to the cluster with the nearest center
+5. Go back to 3
+
+It always converges to a minimum, which might be a local minimum.
+
+#### Model-based
+Such as EM (view AA1)
+
 
 ## Linear Discriminant Analysis
 
