@@ -50,8 +50,14 @@
     - [K-Nearest Neighbors](#k-nearest-neighbors)
   - [06](#06)
     - [Regression tree](#regression-tree)
+    - [Classification tree](#classification-tree)
       - [Gini](#gini)
     - [Random forest](#random-forest)
+  - [07](#07)
+    - [Boosting](#boosting)
+      - [AdaBoost classifier](#adaboost-classifier)
+      - [Boosting for regression](#boosting-for-regression)
+      - [Gradient boosting](#gradient-boosting)
 
 
 ## 01
@@ -135,7 +141,7 @@ No se puede calcular, porque  se modela sobre un conjunto de datos finito. Pero 
 
 #### Empirical Error
 
-(Training error)
+(Testing error)
 
 Asumiendo que los datos son independientes e idénticamente distribuidos (i.i.d.):
 
@@ -301,6 +307,8 @@ $$\hat{\theta}_{Ridge} = (X^T X + \lambda I)^{-1} X^T y$$
 
 Que minimiza la el cuadrado de la norma L2 de los parámetros y the sum of the squared error.
 
+- La funcion de regresion lineal es el mejor predictor posible, en el sentido que conseguiria sesgo cero y varianza minima.
+
 ### Lasso Regression
 
 Minimize the sum of the squared error and the L1 norm of the parameters.
@@ -443,14 +451,29 @@ $$
 \hat{y} = \argmin_y E[L(y, y')] = \argmin_y \sum_{y'} L(y, y') p(y' | x) = \argmax_y p(y | x)
 $$
 
+- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos.
+- Si se asume Gaussianidad, entonces Bayes se aproxima a QDA con matriz de covarianza diagonal.
+
 ### Discriminative vs Generative
 
 **Discriminative**: Modela la distribucion condicional $p(y | x)$. Aprende la frontera de decision directamente en base a la minimizacion de la perdida esperada.
 
-**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos. Permite también generar nuevas muestras basadas en el modelo.
+- **Ventajas:**
+  - No hay necesidad de conocer la distribucion de los datos.
 
-- El umbral de decision se puede obtener a partir de la distribucion de los datos.
+- **Desventajas:**
+  - Incapas de generar nuevas muestras.
+
+**Generative**: Modela la distribucion conjunta $p(x, y)$. Aprende la distribucion de los datos y la frontera de decision se obtiene a partir de la distribucion de los datos.
+
 - Complicado cuando no se conoce la distribucion de los datos o hay muy pocos datos.
+- **Ventajas:**
+  - Capacidad de generar nuevas muestras.  Permite también generar nuevas muestras basadas en el modelo ya que se conoce la distribucion de los datos.
+  - Capturan la estructura de los datos al modelar la distribucion conjunta.
+
+- **Desventajas:**
+  - Mayor complejidad computacional.
+  - Mayor dependencia de los datos de entrenamiento. Se requiere un conjunto de entrenamiento más grande para obtener buenos resultados.
 
 #### LDA/QDA
 
@@ -465,7 +488,7 @@ $$
 Si se asume que las distribuciones a priori son $p(y = k) = \pi_k$, entonces la funcion discriminante es:
 
 $$
-g_k(x) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k) + C
+g_k(x) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1}_k (x - \mu_k) + C
 $$
 
 El primer termino es el logaritmo de la probabilidad a priori de la clase $k$.
@@ -475,7 +498,7 @@ El segundo termino es la distancia de Mahalanobis entre el punto $x$ y el centro
 - La frontera de decision es el conjunto de puntos $x$ tales que $g_k(x) = g_j(x)$.
 
 - La funcion $g_k$ es la funcion cuadratica discriminiante (QDA) y el clasificador correspondiente es implemnetado prediciendo la clase $k$ para la cual $g_k(x)$ es maxima.
-- Que corresponde a escger la clase con una probibilidad a posteriori maxima.
+- Que corresponde a escoger la clase con una probibilidad a posteriori maxima.
 
 - Fronteras de desicion cuadraticas, porque la frontera de decision es un paraboloide.
 
@@ -492,6 +515,7 @@ En ambos casos es fundamental escoger la forma de la matriz de covarianza (diago
 
 Se puede usar regularización añadiendo continuidad entre la matriz de covarianza conjunta (LDA) y la matriz de covarianza de cada clase (QDA). También evita problemas de singularidad.
 $$\hat\Sigma_k(\alpha)=\alpha\hat\Sigma_k+(1-\alpha)\hat\Sigma$$
+
 #### Naive Bayes
 
 - Modelo generativo.
@@ -501,7 +525,7 @@ $$
 p(x, y) = p(y) \prod_{j=1}^d p(x_j | y)
 $$
 
-En general no es cierto pero puede ser una buena aproximacion para muchos casos.Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
+En general no es cierto pero puede ser una buena aproximacion para muchos casos. Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
 
 Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con categorias con frecuencia 0 en la muestra.
 
@@ -509,9 +533,10 @@ Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con catego
 
 - Modelo discriminativo.
 - No probabilistico para datos linealmente separables.
+- Algoritmo online. Actualiza los pesos en cada iteracion. Recibe una observacion de training a la vez y actualiza los pesos en base a la observacion.
 
 $$
-y = \text{sign}(\sum_{j=1}^d w_j x_j) = \text{sign}(w^T x) = \begin{cases}
+\hat{y} = \text{sign}(\sum_{j=1}^d w_j x_j) = \text{sign}(w^T x) = \begin{cases}
 1 & \text{si } w^T x > 0 \\
 -1 & \text{si } w^T x \leq 0
 \end{cases}
@@ -522,14 +547,14 @@ w = 0
 while not converged:
     for i in range(N):
         # predicts positive class if w^T x_i > 0
+        # predicts negative class if w^T x_i <= 0
 
-        # else, on a mistake:
-        if y_i * w^T x_i <= 0:
-            w = w + y_i * x_i
-            # update w on positive or negative mistake (depending on y_i)
+        # else, on a mistake (y_i != y_hat_i)
+          w = w + y_i * x_i
+          # update w on positive or negative mistake (depending on y_i)
 ```
 
-La actualizacion de $w$ en ambos casos se hacerca en 1 a la solucion optima.
+La actualizacion de $w$ en ambos casos se acerca en 1 a la solucion optima.
 
 $$
 w_{t+1}^T x_i = w_t^T x_i + y_i x_i^T x_i = w_t^T x_i + y_i ||x_i||^2 = w_t^T x_i + y_i
@@ -537,7 +562,26 @@ $$
 
 al haber escalado para tener norma euclidiana 1.
 
-- Un amejor alternativa es usar la funcion *sigmoid* (mapea a [0,1] para que el resultado pueda ser interpretado como probabilidad) o *logistic*, que es una version suavizada de la funcion signo.
+El numero de errores que comete Perceptron es acotado por:
+
+$$
+\frac{1}{\gamma^2}, \ \gamma = \min_{x} w^T x
+$$
+
+- $\gamma$ es la distancia del hiperplano a la clase más cercana. Similar a la distancia de Margen en SVM. Aunque en SVM se maximiza el margen de separación.
+
+- **Ventajas:**
+  - Simplicidad y eficiencia computacional. Especialmente para datos linealmente separables.
+  - Interpretacion intuitiva de los pesos. Explica la importancia de cada variable.
+
+- **Desventajas:**
+  - No probabilistico. No se puede interpretar la salida como una probabilidad.
+  - No es robusto a outliers.
+  - No es robusto a datos no linealmente separables.
+  - No es robusto a datos con clases desbalanceadas.
+
+
+Una mejor alternativa es usar la funcion *sigmoid* (mapea a $[0,1]$ para que el resultado pueda ser interpretado como probabilidad) o *logistic*, que es una version suavizada de la funcion signo.
 
 #### Logistic Regression
 
@@ -553,13 +597,14 @@ al haber escalado para tener norma euclidiana 1.
 
 Se usa la vecinada local para estimar la probabilidad de que una observación pertenezca a una clase.
 
-Para un nueva¡o ejemplo $x$
+Para un nuevo ejemplo $x$
 1. Calcular la distancia/similitud con todos los ejemplos del conjunto de entrenamiento.
 2. Seleccionar los $k$ ejemplos más cercanos.
 3. Emititr una prediccion con la combinacion de las clases de los $k$ ejemplos más cercanos.
 
 - Predicciones lentas sobretodo si tenemos un dataset grande.
 - Valores de k muy bajor pueden llevar a overfitting.
+  - Sensible a ruido y outliers.
 - Valores de k muy altos pueden llevar a underfitting.
 - Maldicion de dimensionalidad. A medida que aumenta la dimensionalidad, la distancia entre los puntos se vuelve cada vez más similar.
 - Estandarizar los datos es importante.
@@ -569,6 +614,7 @@ Cuando $k=1$, las regiones de decision corresponden a la union de celulas de vor
 ## 06 
 
 **Metodos de ensamble**: Combinar varios modelos para obtener un modelo más robusto.
+- Los modelos deben ser independientes.
 
 Cuando los modelos base son independientes, el error del modelo ensamblado es menor que el error de los modelos base.
 
@@ -576,22 +622,37 @@ Cuando los modelos base son independientes, el error del modelo ensamblado es me
 
 Particiona el espacio de variables de entrada en regiones rectangulares. Las predicciones son constantes en cada region, pueden ser calculadas como la media de los valores de entrenamiento en cada region.
 
+### Classification tree
+
 - Cada nodo interno es una pregunta sobre una caracteristica.
 - Cada rama es una respuesta a la pregunta.
-- Cada hoja es una predicción.
 - Cada hoja son predicciones constantes.
 
 Problema NP-completo. Se usa greedy search para encontrar una solución aproximada.
 
+Como definir el nodo inicial? 
+- Medir la pureza (nivel de mezcla de observaciones en diferentes clases). Gini, Entropia, etc.
+  - La pureza de un nodo es la suma ponderada de las impurezas de las hojas.
+  - La ponderacion es la fraccion de observaciones que pertenecen a cada hoja entre todas las observaciones del nodo.
+
+$$
+x, x_0 = \argmin_{x, x_0} \frac{S_{x\leq x_0}}{S} Gini(S_{x\leq x_0}) + \frac{S_{x > x_0}}{S} Gini(S_{x > x_0})
+$$
+
+- x es la variable
+- $x_0$ es el punto de corte. (En el caso de variables categoricas, $x_0$ es una categoria)
+
 #### Gini
 
+El indice gini es una medida de impureza de una distribucion de probabilidad. 
+
 $$
-G = \sum_{k=1}^K \hat{p}_{k} (1 - \hat{p}_{k})
+G = \sum_{k=1}^K \hat{p}_{k} (1 - \hat{p}_{k}) = 1 - \sum_{k=1}^K \hat{p}_{k}^2
 $$
 
-Donde $\hat{p}_{k}$ es la fracción de observaciones de la clase $k$.
+Donde $\hat{p}_{k}$ es la fracción de observaciones que pertenecen a la clase $k$ en el nodo.
 
-- Entre mas pura la distribucion, menor el indice de gini. Pura hace referencia a que la distribucion es 0 o 1.
+- Entre mas pura la distribucion, menor el indice de gini.
 - Entre mas uniforme la distribucion, mayor el indice de gini.
 
 
@@ -601,16 +662,32 @@ Para reducir la variancia de un estimador, se puede entrenar varios estimadores 
 
 **Bagging**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. Promediar las predicciones de los modelos base.
 - Hacer la predicciones mas robustas y mas precisas.
+- Ideal para cuando los modelos base tienen alta varianza
+
+- Las repericiones estan permitidas.
+- Las muestras que no han sido escogidas son puestas en un set de validacion OOB. (Out of bag)
+- El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
 
 Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging. En el caso de Random Forest también se usa un subconjunto diferente de las features en cada split/nodo de los arboles.
 
+Pseudo-codigo:
 
-- Ideal para cuando los modelos base tienen alta varianza
+```python
+T_b = []
+for b in range(B)
+  # B boostrap samples (with replacement)
+  X_b, y_b = bootstrap(X, y)
 
-**Boosting**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. 
-- Las repericiones estan permitidas.
-- Las muestras que no han sido escogidas son puestas en un set de validacion OOB.
-- El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
+  # Train a decision tree on X_b, y_b. Each node by:
+    # Select m variables at random from X_b
+    # Pick best variable/split-point to split on (Gini/MSE)
+    # Split the node
+    # Repeat until the leaves are pure or until the leaves contain a minimum number of training examples
+  tree = DecisionTree()
+  tree.fit(X_b, y_b)
+
+  T_b.append(tree)
+````
 
 **Ventajas**:
 - No requiere validacion cruzada (OBB error rate)
@@ -620,3 +697,115 @@ Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeño
 
 **Desventajas**:
 - Muchos trees pueden dificultar la interpretacion.
+
+
+## 07
+
+### Boosting
+
+Boosting es un meta-algortimo de aprendizaje automatico que reduce el sesgo y la varianza de los estimadores base en un contexto de aprendizaje supervisado.
+
+- Tipo de algoritmo de ensamble.
+
+- Combinar varios clasificadores debiles (base) para obtener un clasificador fuerte. Combinación lineal ponderada de los clasificadores debiles en funcion de la exactitud de sus predicciones.
+
+#### AdaBoost classifier
+
+$$
+H(x) = \hat{y} = \text{sign}(\sum_{t=1}^T \alpha_t h_t(x))
+$$
+
+- $h_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$.
+- $\alpha_t$ es el peso del clasificador debil de la iteracion $t$ (ponderacion de la exactitud de sus predicciones).
+- $T$ es el numero de iteraciones.
+
+Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior para corregirla. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
+
+```python
+# Inicializar pesos
+D_1 = [1/N, ..., 1/N] # N observaciones
+
+for t in range(T):
+    # Entrenar clasificador debil
+    h_t = train(X, y, D_t)
+    
+    # Calcular error
+    e_t = sum(D_t * (h_t != y)) / sum(D_t)
+    
+    # Calcular peso
+    alpha_t = 1/2 * log((1 - e_t) / e_t)
+    
+    # Actualizar pesos
+    # Z_t es un factor de normalizacion para que los pesos sumen 1 (sean una distribucion)
+    D_t+1 = D_t * exp(-alpha_t * y * h_t(X)) / Z_t
+```
+
+- Una forma de entrenar el clasificador debil $h_t$ es formar los arboles de decision de cada feature y escoger el que tenga el menor Gini index.
+  - Los predictores lineales son Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
+
+- Una forma de actualizar el conjunto de entrenamiento es seleccionar el mismo numero total de muestras $N$ del conjunto de entrenamiento original, pero con reemplazo. Las muestras que fueron seleccionadas varias veces tienen mayor peso $D_t$. Nuevamente se asignan pesos uniformes a las muestras.
+
+**Desventajas:**
+- Sensible a ruido y outliers
+- Trabajo secuencial
+
+
+#### Boosting for regression
+
+Encontrar una función $F(x)$ que minimice el error cuadratico medio. Tal que $F(x) \approx y$.
+
+- Modelo aditivo
+
+$$
+F(x) = \sum_{t=1}^T f_t(x)
+$$
+
+- $f_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$.
+
+Los residuos son las diferencias entre las predicciones y los valores reales.
+
+$$
+r_t = y - f_{t}(x)
+$$
+
+Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valore observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
+
+- Sofisticando los predictores base mediante una suma.
+
+
+```python	
+# Inicializar F_0
+f_0 = 0
+F_t = f_0
+for t in range(1, T):
+    # Generar algoritmo base nuevo
+    # beta_m = coeficiente del modelo base
+    (beta_m, gamma_m) = arg_min(sum(L(y, F_t(x) - beta * h(x, gamma))))
+
+    # Actualizar F_t
+    F_t = F_t + beta_m * h(x, gamma_m)
+```
+
+- Definir $L(.)$ y $h(.)$.
+- Típicamente $L(.)$ es el error cuadratico medio y $h(.)$ es un arbol de decision.
+
+
+#### Gradient boosting
+
+Gradient boosting es una generalizacion de boosting que permite optimizar cualquier funcion de perdida diferenciable.
+
+$$
+f_k := f_{k-1} + \gamma_k \nabla L(y, f_{k-1}(x))
+$$
+
+$$\nabla L(y, f_{k-1}(x)) = \frac{\partial L(y, f_{k-1}(x))}{\partial f_{k-1}(x)}$$
+
+- Suma de modelos: paralelismo entre gradient descent y boosting para regresion.
+- $\gamma_k$ es el learning rate. En este caso sera una exploracion lineal.
+
+
+En el caso de usar el error cuadratico medio como funcion de perdida, la derivada es:
+
+$$
+\nabla L(y, f_{k-1}(x)) = y - f_{k-1}(x)
+$$

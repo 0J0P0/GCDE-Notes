@@ -94,8 +94,11 @@ $$
 
 no need for $x$ to be a regular point. $x$ becomes a strict local minimizer.
 
-If we are dealing with a convex problem, the KKT are necessary and sufficient conditions for optimality. If the problem is strictly convex, the minimum is global. 
-  **Note**: $f,g,h,\in\mathcal{C}^1$ and $f,g$ convex and $h(x)$ affine.
+If we are dealing with a convex problem, the KKT are necessary and sufficient conditions for optimality. 
+- If the problem is convex, the minimum is global.
+- If the problem is strictly convex, the minimum is unique global.
+
+**Note**: $f,g,h,\in\mathcal{C}^1$ and $f,g$ convex and $h(x)$ affine.
 
 ## Duality
 

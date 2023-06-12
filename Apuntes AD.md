@@ -1,5 +1,12 @@
 # AD - Data Analysis
 
+> If `pvalue < 0.05` then we reject the null hypothesis. If `pvalue > 0.05` then we accept the null hypothesis.
+
+> Covariance matrix $S = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})(x_i - \bar{x})^T$ (square and symmetric matrix). Or $S = \frac{1}{n} X^T P X$ where $P$ is the centering matrix.
+> When dividing by $n-1$ instead of $n$ we get an unbiased estimator of the covariance matrix.
+
+> Standarisazion of variables implies that the covariance matrix is the correlation matrix.
+
 - [AD - Data Analysis](#ad---data-analysis)
   - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
     - [What is PCA?](#what-is-pca)
@@ -35,7 +42,11 @@
       - [Average linkage](#average-linkage)
       - [Centroide distance](#centroide-distance)
       - [Ward's criterion](#wards-criterion)
+    - [Elbow method](#elbow-method)
+    - [Pseudo F index](#pseudo-f-index)
+    - [Silhouette index](#silhouette-index)
   - [Linear Discriminant Analysis](#linear-discriminant-analysis)
+    - [LDA vs PCA](#lda-vs-pca)
 
 
 ## Principal Component Analysis (PCA)
@@ -66,7 +77,7 @@ The transformation is defined in such a way that the first principal component h
 
 2. Center the data. This is done by subtracting the mean of each variable from each observation of that variable. This is done to make sure that the variables are centered around zero.
 
-3. Calculate the covariance matrix $S$. This is done by multiplying the centered data matrix by its transpose. The covariance matrix is a square matrix with the number of rows and columns equal to the number of variables.
+3. Calculate the covariance matrix $S$. This is done by multiplying the centered data matrix by its transpose and dividing by the number of observations. The covariance matrix is a square matrix with the variances of the variables along the diagonal and the covariances between each pair of variables in the off-diagonal elements.
 
 4. Calculate the eigenvectors and eigenvalues of the covariance matrix. The eigenvectors are the principal components. The eigenvalues are the variances of the principal components.
 
@@ -90,7 +101,7 @@ In matrix notation:
 
 $$Z = X^cU$$
 
-where $Z$ is the matrix of principal  $(n\times p)$, $X^c$ is the centered data matrix, and $U$ is the matrix of eigenvectors.
+where $Z$ is the matrix of principal $(n\times p)$, $X^c$ is the centered data matrix, and $U$ is the matrix of eigenvectors.
 
 The variance of the $i^{th}$ principal component is the $i^{th}$ eigenvalue of the covariance matrix $S$ from SD (spectral descomposition).
 
@@ -213,7 +224,7 @@ Distance: $d(x, y)$
 
 $$d^2(x, y) = s(x, x) + s(y, y) - 2s(x, y)$$
 
-**Similarity matrix**: $Q = XX^T$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.  Note the difference between $Q=XX^T$ and $S=\frac{1}{n-1}X^TX$.
+**Similarity matrix**: $Q = XX^T$ (cross-product matrix), where the columns of $X$ have zero mean and are orthogonal to each other. If $X$ is not centered, then $(I - \frac{1}{n} 1^T1)X$ is used as a centered transformation of $X$.  Note the difference between $Q=XX^T$ and $S=\frac{1}{n}X^TX$.
 
 
 since $Q_{ij}$ is the dot product of the $i^{th}$ and $j^{th}$ row of $X$. If both elements are the same, the dot product is the square of the element ($\cos(\alpha_{ij}) = 1$). If the elements are different, the dot product close to zero.
@@ -239,8 +250,6 @@ Recompute $X$ from $D$ and $Q$.
 
 Correspondence analysis is a statistical technique for displaying the rows and columns of a contingency table in a low-dimensional space. The rows and columns are represented as points in a geometric space. The geometric space is defined by the correspondence between the rows and columns.
 
-- Not to check the independence between the rows and columns (that can be done with a $\chi^2$ test).
-
 - To understand relationships between categorical variables.
   - Visualize associations between categorical variables.
 - Understand the contingency table as a data matrix.
@@ -261,49 +270,81 @@ Each cell $x_{ij}$ is the number of observations that fall into the $i^{th}$ row
 
 ### Test of independency
 
-The null hypothesis is that the two categorical variables are independent.
+The null hypothesis is that the rows and columns of the contengency table are independent (the two categorical variables are independent).
 
 - Chi square test of independence
 
-$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(n f_{ij} - n f_{i.}f_{.j})^2}{n f_{i.}f_{.j}} = n \phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+$$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(f_{ij} - f_{i.}f_{.j})^2}{f_{i.}f_{.j}} = n\phi^2 \sim \chi^2_{(I-1)(J-1)}$$
 
 - where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
 
-- $\phi^2$ is called link. The deviation of the link is associated with the desviation of observed from expected values.
+- $\phi^2$ is called link. The desviation of the link is associated with the desviation of observed from expected values (under independence).
+
+  - When independence, the profiles are the same as the mean profiles.
+  - The cloud has 0 inertia.
+  - The further the data from independence, the higher the inertia and the more the profiles spread from the mean profiles.
 
 ### Profiles
 
 Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$.
 
+- **Row profile** shows the distribution of the row variable across the different categories of the column variable
+
+- The **average profile** $G_I$ is the average of the row profiles. It is the center of the cloud of row profiles.
+
 #### Cloud of profiles $N_I$ or $N_J$
 
 The bigger the distance, the higher variance between the point of the plots.
 
-**Distance**: $d_{i,l}^2 = \sum_{j=1}^J \frac{1}{f_{.j}} (\frac{f_{ij}}{fi.} - \frac{f_{lj}}{f_{l.}})^2$
+**Distance**:
 
+$d_{i,l}^2 = \sum_{j=1}^J \frac{1}{f_{.j}} (\frac{f_{ij}}{fi.} - \frac{f_{lj}}{f_{l.}})^2$ (row profiles)
+
+$d_{j,l}^2 = \sum_{i=1}^I \frac{1}{f_{i.}} (\frac{f_{ij}}{f_{.j}} - \frac{f_{il}}{f_{.l}})^2$ (column profiles)
 
 ### Intertia
 
 The inertia is the sum of the squared distances between the points and the center of the cloud of points $G_I$.
 
-- The center of the cloud corresponds to the row/column with the most similar pattern to the median profile.
 - The farther the point in the cloud from the center, the less similar the profile is to the median profile.
 
 $$Inertia(N_I/G_I) = \sum_{i=1}^I Inertia(I/G_I) = \sum_{i=1}Î f_{i.} d_{i, G_I}^2 = \phi^2$$
 
 $$Inertia(N_J/G_J) = \sum_{j=1}^J Inertia(J/G_J) = \sum_{j=1}^J f_{.j} d_{j, G_J}^2 = \phi^2$$
 
+$$
+\sum_{k=1}^K \lambda_k = Inertia(N_I/G_I) = Inertia(N_J/G_J) = \phi^2
+$$
+
+```r
+res.ca <- CA(df)
+
+# Eigenvalues
+res.ca$eig 
+# Row profiles
+res.ca$row
+# Coordinates of the row profiles
+res.ca$row$coord
+# Cloud of row profiles
+plot.CA(res.ca, choix = "row", invisible = "col")
+```
+
 ## Multiple Correspondence Analysis
 
 To visualize relationships between categories of J number of qualitative variables for I number of individuals.
 
-**Indicator matrix**: Rows ansd columns representing all the levels for each categorical variable. 
+**Indicator matrix**: Rows represent individuals and columns represent dummy variables for each category of the qualitative variables.
 
 - $I_{ij} = 1$ if the individual $i$ is in the category $j$ of the qualitative variable.
 
-**Burt matrix**: Rows represent the categories of the qualitative variables and columns are dummy variables representing individuals.
+**Burt matrix**: Rows represent categories of the qualitative variables and columns represent categories of the qualitative variables. All possible pairs of categories.
 
 - $B_{ij}$ is the number of time the categorical pairs $i,j$ appear together.
+- Symmetric matrix.
+
+$$
+\lambda^{B} = (\lambda^{I})^2
+$$
 
 ### Studying individuals
 
@@ -378,13 +419,85 @@ $$
 \min \Delta = \min SS_{A \cup B} - (SS_A + SS_B)
 $$
 
+```r
+?hclust # hiercal clustering
+fit <- hclust(d, method="single") 
+plot(fit,main="Dendrogram of Single Linkage") # Dendogram
+```
+
+### Elbow method
+
+- To determine the number of clusters.
+- Total within sum of squares (TWSS) per number of clusters.
+- The optimal number of clusters is the number of clusters after which the TWSS starts to decrease in a linear fashion.
+
+```r
+k4$withinss
+# SSQ within each cluster
+k4$totss
+# SSQ total
+k4$tot.withinss
+# Total SSQ within clusters
+k4$betweenss + k4$tot.withinss
+# SSQ total
+```
+
+### Pseudo F index
+
+Defines the ratio of between cluster sum of squares (BSS) to the within cluster sum of squares (WSS)
+
+$$
+F = \frac{BSS/(K-1)}{WSS/(N-K)}
+$$
+
+- $K$ is the number of clusters.
+- $N$ is the number of individuals.
+
+```r	
+aux<-c()
+for (i in 2:10){
+  k<-kmeans(usa[,-5],centers=i,nstart=25)
+  aux[i]<-((k$betweenss)*(nrow(usa)-i))/((k$tot.withinss)*(i-1))
+}
+plot(aux, xlab="Number of Clusters", ylab="Pseudo-F", type="l", main="Pseudo F Index")
+which.max(aux) # max value is selected
+```
+
+### Silhouette index
+
+The Silhouette index is a measure used to assess the quality of clustering in data analysis.
+
+Measures the closeness of each point in a cluster to the points in the other clusters.
+
+The Silhouette index is calculated for each data point and ranges from -1 to 1. A higher value indicates that the data point is well-matched to its own cluster and poorly-matched to neighboring clusters, while a lower value suggests that the data point may be assigned to the wrong cluster.
+
+The number of clusters that maximizes the Silhoutte index is chosen as the optimum number of clusters.
+
+- For each data point, calculate two distances:
+  - a) Average distance to all other data points in the same cluster (cohesion).
+  - b) Average distance to all data points in the nearest neighboring cluster (separation).
+
+- Compute the silhouette coefficient for each data point using the formula:
+silhouette coefficient = (separation - cohesion) / max(separation, cohesion)
+
+- Calculate the average silhouette coefficient across all data points to obtain the Silhouette index for the clustering algorithm.
+
+```r
+res <- fastkmed(d, 6)
+# Depending on the number of clusters, the silhouette index may be different. The distances may be different.
+silhouette <- sil(d, res$medoid, res$cluster)
+silhouette$result
+silhouette$plot
+```
 
 ## Linear Discriminant Analysis
 
-- The difference with clustering is that we know how many groups we want to find. We want to find the best linear combination of variables that separates the groups.
+- The difference with clustering is that in LDA we know how many groups we want to find. We want to find the best linear combination of variables that separates the groups.
+
+- To classify individuals into groups by a linear combination of quantitative variables.
 
 **Assumptions**:
-- The distribution of a quantitative variable is normal in each category k: $X_k \sim N(\mu_k, \Sigma_k)$
+- The distribution of a quantitative variable is normal in each category $k$: $X_k \sim N(\mu_k, \Sigma_k)$
 - The covariance matrices are equal: $\Sigma_1 = \Sigma_2 = ... = \Sigma_k = \Sigma$
 
 The exponent of the multivariate normal distribution is:
@@ -395,18 +508,22 @@ $$
 
 which refers to the Mahalanobis distance between the observation and the mean of the category k.
 
-- The bigger the Mahalanobis distance $D_k$, the less likely the observation belongs to the category k.
+- The bigger the Mahalanobis distance $D_k$, the less likely the observation belongs to the category $k$. This is because the observation is far from the mean of the category $k$.
+
+**ML estimators:**
+- $\hat{\mu}_k = \frac{1}{n} \sum_{i=1}^n x_i$
+- $\hat{\Sigma}_k = \frac{1}{n} \sum_{i=1}^n (x_i - \hat{\mu}_k)(x_i - \hat{\mu}_k)^T$
 
 The probability function that an observation comes from a given category is:
 
 $$
-P(X = x | Y = k) = \frac{1}{(2 \pi)^{p/2} |\Sigma|^{1/2}} e^{-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)}
+f_k(x) = P(X = x | Y = k) = \frac{1}{(2 \pi)^{p/2} |\Sigma|^{1/2}} e^{-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)}
 $$
 
-Using Bayes' theorem, the probability that an observation belongs to a given category is:
+Using Bayes' theorem, the probability that an observation belongs to a given category is (posterior probability):
 
 $$
-P(Y = k | X = x) = \frac{P(X = x | Y = k) P(Y = k)}{P(X = x)}
+P(Y = k | X = x) = \frac{P(X = x | Y = k) P(Y = k)}{P(X = x)} = \frac{f_k(x) \pi_k}{\sum_{l=1}^K f_l(x) \pi_l}
 $$
 
 where $P(Y = k)$ is the prior probability of category k and $P(X = x)$ is the marginal probability of the observation, which is the sum of $P(X = x | Y = k) P(Y = k)$ over all categories.
@@ -414,10 +531,12 @@ where $P(Y = k)$ is the prior probability of category k and $P(X = x)$ is the ma
 For two categories, the probability that an observation belongs to category 1 is:
 
 $$
-P(Y = 1 | X = x) = \frac{1}{1 + \frac{\pi_1}{\pi_2} e^{-\frac{1}{2}(D_1^2 - D_2^2)}}
+P(Y = 1 | X = x) = \frac{f_1(x) \pi_1}{f_1(x) \pi_1 + f_2(x) \pi_2} = \frac{1}{1 + \frac{\pi_1}{\pi_2} e^{-\frac{1}{2}(D_2^2 - D_1^2)}}
 $$
 
-- The greater the distance $D_1$ and the smaller the distance $D_2$, the greter the denominator and the greater the probability that the observation belongs to category 2. The opposite is true for category 1. Assuming that $\frac{\pi_1}{\pi_2} = 1$.
+- The greater the distance $D_1$ with respect to $D_2$, the greater the denominator and the greater the probability that the observation belongs to category 2. The opposite is true for category 1. Assuming that $\frac{\pi_1}{\pi_2} = 1$.
+
+- Similarly, if $\pi_1 f_1(x) < \pi_2 f_2(x)$, then the observation is more likely to belong to category 2. The opposite is true for category 1.
 
 The maximization of this probability is equivalent to the minimization of the Mahalanobis distance and leads to the Bayes classifier.
 
@@ -430,3 +549,52 @@ $$
 where $\hat{\mu_k}$ is the mean of the observations in category k and $s_k^2$ is the variance of the observations in category k.
 
 The misclassifications are denoted by $P(1|2)$ and $P(2|1)$ in the case of two categories. Maximizing the ratio of the between-group variance to the within-group variance is equivalent to minimizing the misclassification rate.
+
+**Classification Rule**
+
+$$
+\delta_k(x) = x^T \Sigma^{-1} \mu_k - \frac{1}{2} \mu_k^T \Sigma^{-1} \mu_k + \log(\pi_k), \ \ \delta_k(x) \approx \log(\pi_k f_k(x))
+$$
+
+- The observation is assigned to the category k for which $\delta_k(x)$ is the largest.
+
+**Correct classification rate**
+
+|          | Predicted 1 | Predicted 2 |
+| -------- | ----------- | ----------- |
+| Actual 1 | $n_{11}$    | $n_{12}$    |
+| Actual 2 | $n_{21}$    | $n_{22}$    |
+
+
+$$
+CRR = \frac{n_{11} + n_{22}}{n_{11} + n_{12} + n_{21} + n_{22}}
+$$
+
+```r	
+skullda<-lda(type~., data=skulls)
+# Prior probabilities initially computed from the sample sizes.
+
+# The group means of the variables are the centroids of the groups.
+# The greater the difference between the group means of each variable, the greater the difference and the better the separation of the groups with respect to that variable.
+
+# The number of discriminant functions is equal to the number of groups minus one. The number of groups is equal to the number of levels of the response variable.
+```
+
+```r	
+# Prediction Accuracy p1^2+p^2
+pa<-skullda$prior[1]^2 + skullda$prior[2]^2
+# Prediction Accuracy should be greater than 1/levels of the response variable. This would mean that the model is better than random guessing.
+```
+
+### LDA vs PCA
+
+- Supervision:
+  - PCA is an unsupervised technique, meaning it does not consider class labels during its computations.
+  - LDA is a supervised technique that utilizes class labels to maximize the separability between different classes.
+- Objective:
+  - The objective of PCA is to maximize the variance in the dataset, capturing the directions (principal components) that explain the most variability.
+  - The objective of LDA is to maximize the class separability by finding linear combinations of features that maximize the between-class distance and minimize the within-class distance.
+
+- Use case:
+  - PCA is often used for exploratory data analysis, visualization, noise reduction, and data compression. It helps identify the most significant features or patterns in the data.
+  - LDA is primarily used for classification tasks and feature extraction when there is a clear distinction between classes. It seeks to enhance the separability of different classes in a dataset.
