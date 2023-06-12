@@ -36,6 +36,7 @@
     - [Representation quality](#representation-quality)
   - [Multiple Correspondence Analysis](#multiple-correspondence-analysis)
     - [Studying individuals](#studying-individuals)
+    - [Relationship to CA](#relationship-to-ca)
   - [Cluster Analysis](#cluster-analysis)
     - [Hierarchical clustering](#hierarchical-clustering)
       - [Single nearest neighbor](#single-nearest-neighbor)
@@ -371,6 +372,19 @@ $$
 - $C$ is a constant.
 - $I_k$ is the number of individuals in the category $k$.
 - $x_{ik}$ is 1 if the individual $i$ is in the category $k$ and 0 otherwise.
+
+### Relationship to CA
+By setting $C=I/J$ wwe can obtain the distnace between row and column profiles equivalent to CA. 
+
+The inertia of a category $K$ is given by $\frac{1}{J}\left(1-\frac{I} {I_k}\right)$ and increases when the category is Rare.
+
+The inertia of a variable is given by $\frac{K_j-1}{J}$.
+
+The total inertia of the cloud of categories is $K/J-1$.
+
+As in CA, the barycentric property applies.
+
+
 
 ## Cluster Analysis
 
