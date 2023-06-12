@@ -46,6 +46,7 @@
     - [Pseudo F index](#pseudo-f-index)
     - [Silhouette index](#silhouette-index)
   - [Linear Discriminant Analysis](#linear-discriminant-analysis)
+    - [LDA vs PCA](#lda-vs-pca)
 
 
 ## Principal Component Analysis (PCA)
@@ -584,3 +585,16 @@ skullda<-lda(type~., data=skulls)
 pa<-skullda$prior[1]^2 + skullda$prior[2]^2
 # Prediction Accuracy should be greater than 1/levels of the response variable. This would mean that the model is better than random guessing.
 ```
+
+### LDA vs PCA
+
+- Supervision:
+  - PCA is an unsupervised technique, meaning it does not consider class labels during its computations.
+  - LDA is a supervised technique that utilizes class labels to maximize the separability between different classes.
+- Objective:
+  - The objective of PCA is to maximize the variance in the dataset, capturing the directions (principal components) that explain the most variability.
+  - The objective of LDA is to maximize the class separability by finding linear combinations of features that maximize the between-class distance and minimize the within-class distance.
+
+- Use case:
+  - PCA is often used for exploratory data analysis, visualization, noise reduction, and data compression. It helps identify the most significant features or patterns in the data.
+  - LDA is primarily used for classification tasks and feature extraction when there is a clear distinction between classes. It seeks to enhance the separability of different classes in a dataset.
