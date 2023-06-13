@@ -141,7 +141,7 @@ No se puede calcular, porque  se modela sobre un conjunto de datos finito. Pero 
 
 #### Empirical Error
 
-Asumiendo que los datos son independientes e idénticamente distribuidos (i.i.d.):
+Asumiendo que los datos son independientes e idénticamente distribuidos (i.i.d.) y que la función de aprendizaje generaliza correctamente (no hay overfitting):
 
 $$\text{true error} \approx \text{empirical error} = \frac{1}{n} \sum_{i=1}^n L(y_i, f(x_i))$$
 
