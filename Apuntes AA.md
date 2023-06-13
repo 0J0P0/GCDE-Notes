@@ -69,7 +69,7 @@ Un sistema _(vivo o no)_ aprende si usa experiencia pasada para mejorar el rendi
 
 - mejorar el rendimiento del futuro = mejorar predicciones.
 
-Proceso de ecnontrar y ajsutar buenos modelos que expliquen los datos finitos observados y tambiñen pueda predecir nuevos datos.
+Proceso de ecnontrar y ajsutar buenos modelos que expliquen los datos finitos observados y tambien puedan predecir nuevos datos.
 
 #### Supervised Learning
 Usando data etiquetada para aprender a predecir etiquetas desconocidas.
@@ -78,7 +78,7 @@ Usando data etiquetada para aprender a predecir etiquetas desconocidas.
 - Clasificación: predicción de valores discretos (categorías).
 
 #### Unsupervised Learning
-No so necesarias etiquetas para aprender.
+No son necesarias etiquetas para aprender.
 
 - Clustering: agrupar datos en grupos. Descubrir grupos homogéneos en los datos.
 - Dimensionality Reduction: reducir la dimensionalidad de los datos. Descubrir subespacios de los datos que contienen la mayor parte de la información.
@@ -103,7 +103,7 @@ $$f: R^d \rightarrow {C_1, ..., C_k}$$
 $$f: R^d \rightarrow R$$
 
 #### Modelo como distribución de probabilidad
-Si se asume que lso datos vienen de un proceso estóstico, puede ser util permitir al modelo representar/quantificar la incertidumbre en sus predicciones.
+Si se asume que los datos vienen de un proceso estóstico, puede ser util permitir al modelo representar/quantificar la incertidumbre en sus predicciones.
 
 
 ### Data preprocessing
@@ -119,7 +119,7 @@ Como se puede restringir la complejidad del modelo:
 
 #### Complexity control
 
-Se debe aplicar un control de "fitting" para evitar que el modelo se ajuste demasiado a los datos de entrenamiento. Esto asegura que el modelo generalice bien a nuevos datos.
+Se debe aplicar un control de "fitting" para evitar que el modelo no se ajuste demasiado a los datos de entrenamiento. Esto asegura que el modelo generalice bien a nuevos datos.
 
 $$\text{true error} \leq \text{training error} + \text{complexity(f)}$$
 
@@ -141,8 +141,6 @@ No se puede calcular, porque  se modela sobre un conjunto de datos finito. Pero 
 
 #### Empirical Error
 
-(Testing error)
-
 Asumiendo que los datos son independientes e idénticamente distribuidos (i.i.d.):
 
 $$\text{true error} \approx \text{empirical error} = \frac{1}{n} \sum_{i=1}^n L(y_i, f(x_i))$$
@@ -151,7 +149,7 @@ $$\text{true error} \approx \text{empirical error} = \frac{1}{n} \sum_{i=1}^n L(
 
 Minimizar excessivamente el error de entrenamiento puede llevar a un modelo que no generaliza bien. (Overfitting)
 
-La manera natural de arrercar el error de entrenamiento es reducir la complejidad del modelo. Pero esto puede llevar a un error de generalización alto.
+La manera natural de arreglar el error de entrenamiento es reducir la complejidad del modelo. Pero esto puede llevar a un error de generalización alto.
 
 #### Regularization Error
 
@@ -245,7 +243,6 @@ $$\text{true error} = \mathbb{E}_{x,y} [L(y, f(x))] = \mathbb{E}_{x,y} [(y - \ha
 - Variance: error de varianza. Mide que tan lejos están las predicciones de un modelo entrenado con diferentes conjuntos de datos.
 
 - Irreducible error: error irreducible. No se puede reducir. Mide la cantidad de ruido en los datos.
-
 
 Modelos con alta varianza tienden a sobreajustar los datos de entrenamiento.
 - El modelo es estable si la varianza es baja. (No varía mucho con los datos de entrenamiento)
@@ -356,7 +353,9 @@ $$
 \mu_k = \frac{\sum_{n=1}^N r_{nk} x_n}{\sum_{n=1}^N r_{nk}}
 $$
 
-```
+```python
+# N = numero de observaciones
+# K = numero de clusters
 mu = random(K)
 while not converged:
     for n in range(N):
@@ -387,7 +386,7 @@ Heuristica para inicializar los centroides.
 
 1. Seleccionar un centroide aleatorio de los datos.
 2. Para cada observación, calcular la distancia al centroide más cercano.
-3. Seleccionar un nuevo centroide de acuerdo a la probabilidad de que sea seleccionado proporcional a la distancia al centroide más cercano.
+3. Seleccionar un nuevo centroide de acuerdo a la probabilidad de que sea seleccionado proporcional a la distancia del centroide más cercano.
 4. Repetir 2 y 3 hasta que se tengan K centroides.
 5. Ejecutar K-means con los centroides iniciales.
 
