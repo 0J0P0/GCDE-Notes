@@ -612,11 +612,15 @@ Una mejor alternativa es usar la funcion *sigmoid* (mapea a $[0,1]$ para que el 
 
 ### K-Nearest Neighbors
 
-Se usa la vecinada local para estimar la probabilidad de que una observación pertenezca a una clase.
+Se usa la vecindad local para estimar la probabilidad de que una observación pertenezca a una clase.
 
 Para un nuevo ejemplo $x$
 1. Calcular la distancia/similitud con todos los ejemplos del conjunto de entrenamiento.
 2. Seleccionar los $k$ ejemplos más cercanos.
+   1. Segun la mayoria de votos. (Classification)
+   2. Voto basado en la distancia. (Ponderar por el inverso de la distancia o el inverso del cuadrado de la distancia) (Classification)
+   3. Media de los valores de los $k$ ejemplos más cercanos. (Regression)
+   4. Media ponderada por la distancia de los $k$ ejemplos más cercanos. (Regression)
 3. Emititr una prediccion con la combinacion de las clases de los $k$ ejemplos más cercanos.
 
 - Predicciones lentas sobretodo si tenemos un dataset grande.
@@ -626,7 +630,7 @@ Para un nuevo ejemplo $x$
 - Maldicion de dimensionalidad. A medida que aumenta la dimensionalidad, la distancia entre los puntos se vuelve cada vez más similar.
 - Estandarizar los datos es importante.
 
-Cuando $k=1$, las regiones de decision corresponden a la union de celulas de voronoi.
+Cuando $k=1$, las regiones de decision corresponden a la union de celulas de voronoi. Se usa la misma observacion para predecir su clase.
 
 ## 06 
 
@@ -679,6 +683,7 @@ Para reducir la variancia de un estimador, se puede entrenar varios estimadores 
 
 **Bagging**: Entrenar varios modelos base con diferentes subconjuntos de datos de entrenamiento. Promediar las predicciones de los modelos base.
 - Hacer la predicciones mas robustas y mas precisas.
+  - Entre mas modelos base, la varianza se reduce.
 - Ideal para cuando los modelos base tienen alta varianza
 
 - Las repericiones estan permitidas.
