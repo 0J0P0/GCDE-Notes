@@ -56,7 +56,7 @@
   - [07](#07)
     - [Boosting](#boosting)
       - [AdaBoost classifier](#adaboost-classifier)
-      - [Boosting for regression](#boosting-for-regression)
+      - [Additive Boosting](#additive-boosting)
       - [Gradient boosting](#gradient-boosting)
 
 
@@ -478,7 +478,7 @@ $$
 
 - Modelo generativo.
 - Resultado de implementar una clasificacion bayesiana asumiendo que las distribuciones de las clases son gaussianas.
-- Minimizar la variabilidad intra-clase y maximizar la variabilidad inter-clase. Maximizar la media de las distribuciones de las clases y minimizar la varianza de las distribuciones de las clases.
+- Minimizar la variabilidad intra-clase y maximizar la variabilidad inter-clase. Maximizar la distancia entre medias de las distribuciones de las clases y minimizar la varianza de las distribuciones de las clases.
 
 $$
 p(x | y = k) = \mathcal{N}(x | \mu_k, \Sigma)
@@ -602,7 +602,7 @@ Para un nuevo ejemplo $x$
 3. Emititr una prediccion con la combinacion de las clases de los $k$ ejemplos más cercanos.
 
 - Predicciones lentas sobretodo si tenemos un dataset grande.
-- Valores de k muy bajor pueden llevar a overfitting.
+- Valores de k muy bajos pueden llevar a overfitting.
   - Sensible a ruido y outliers.
 - Valores de k muy altos pueden llevar a underfitting.
 - Maldicion de dimensionalidad. A medida que aumenta la dimensionalidad, la distancia entre los puntos se vuelve cada vez más similar.
@@ -686,7 +686,7 @@ for b in range(B)
   tree.fit(X_b, y_b)
 
   T_b.append(tree)
-````
+```
 
 **Ventajas**:
 - No requiere validacion cruzada (OBB error rate)
@@ -749,7 +749,7 @@ for t in range(T):
 - Trabajo secuencial
 
 
-#### Boosting for regression
+#### Additive Boosting
 
 Encontrar una función $F(x)$ que minimice el error cuadratico medio. Tal que $F(x) \approx y$.
 
@@ -767,7 +767,7 @@ $$
 r_t = y - f_{t}(x)
 $$
 
-Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valore observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
+Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valor observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
 
 - Sofisticando los predictores base mediante una suma.
 
