@@ -731,6 +731,9 @@ Boosting es un meta-algortimo de aprendizaje automatico que reduce el sesgo y la
 
 - Combinar varios clasificadores debiles (base) para obtener un clasificador fuerte. Combinación lineal ponderada de los clasificadores debiles en funcion de la exactitud de sus predicciones.
 
+- Reduccion de computacion al estimar un predictor base en cada iteracion.
+
+
 #### AdaBoost classifier
 
 $$
@@ -776,7 +779,7 @@ for t in range(T):
 
 Encontrar una función $F(x)$ que minimice el error cuadratico medio. Tal que $F(x) \approx y$.
 
-- Modelo aditivo
+- Modelo aditivo. Aprendizaje secuencial. Cada predictor se entrena en función de los errores del predictor anterior.
 
 $$
 F(x) = \sum_{t=1}^T f_t(x)
@@ -810,7 +813,7 @@ for t in range(1, T):
 
 - Definir $L(.)$ y $h(.)$.
 - Típicamente $L(.)$ es el error cuadratico medio y $h(.)$ es un arbol de decision.
-
+- Estrategia greedy.
 
 #### Gradient boosting
 
