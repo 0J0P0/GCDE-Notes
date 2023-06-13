@@ -787,7 +787,7 @@ $$
 Los residuos son las diferencias entre las predicciones y los valores reales.
 
 $$
-r_t = y - f_{t}(x)
+r_t = y - F_{t}(x)
 $$
 
 Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valor observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
