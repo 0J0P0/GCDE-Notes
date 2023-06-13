@@ -442,16 +442,17 @@ Inicialización de los parámetros con kmeans++
 
 - Se busca minimizar el "error esperado" de clasificacion de manera similar a la regresion lineal.
 
-**Bayes classifier**: Clasificador optimo que minimiza el error esperado de clasificacion. Bajo la 0-1 loss, el clasificador bayesiano es el que asigna la clase más probable a cada observación. No es realizable a la práctica.
-
 Minimizar la perdida esperada prediciendo la clase para la cual se minimiza la perdida esperada.
 
 $$
 \hat{y} = \argmin_y E[L(y, y')] = \argmin_y \sum_{y'} L(y, y') p(y' | x) = \argmax_y p(y | x)
 $$
 
-- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos.
-- Si se asume Gaussianidad, entonces Bayes se aproxima a QDA con matriz de covarianza diagonal.
+**Bayes classifier**: Clasificador optimo que minimiza el error esperado de clasificacion. Bajo la 0-1 loss, el clasificador bayesiano es el que asigna la clase más probable a cada observación. No es realizable a la práctica, pues no se conoce $p(y,x)$.
+
+- Se intenta aproximar mediante $p(y | x)$ del conjunto de entrenamiento.
+
+- El clasificador de Bayes es el mejor posible, independientemente de la distribucion de los datos, bajo la 0-1 loss.
 
 ### Discriminative vs Generative
 
@@ -477,17 +478,19 @@ $$
 #### LDA/QDA
 
 - Modelo generativo.
-- Resultado de implementar una clasificacion bayesiana asumiendo que las distribuciones de las clases son gaussianas.
-- Minimizar la variabilidad intra-clase y maximizar la variabilidad inter-clase. Maximizar la distancia entre medias de las distribuciones de las clases y minimizar la varianza de las distribuciones de las clases.
+- Resultado de implementar una clasificacion bayesiana asumiendo que las distribuciones condicionadas de las clases son gaussianas.
 
 $$
 p(x | y = k) = \mathcal{N}(x | \mu_k, \Sigma)
 $$
 
+- Minimizar la variabilidad intra-clase y maximizar la variabilidad inter-clase. Maximizar la distancia entre medias de las distribuciones de las clases y minimizar la varianza de las distribuciones de las clases.
+
+
 Si se asume que las distribuciones a priori son $p(y = k) = \pi_k$, entonces la funcion discriminante es:
 
 $$
-g_k(x) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1}_k (x - \mu_k) + C
+g_k(x) = \log (p(y=k)p(x | y=k)) = \log \pi_k - \frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k) - \frac{1}{2} \log |\Sigma| + \text{C}
 $$
 
 El primer termino es el logaritmo de la probabilidad a priori de la clase $k$.
@@ -510,10 +513,17 @@ $$
 - La frontera de decision es el conjunto de puntos $x$ tales que $g_k(x) = g_j(x)$.
 - Metodo lineal porque la frontera de decision es un hiperplano. Las fronteras son lineales.
 
-En ambos casos es fundamental escoger la forma de la matriz de covarianza (diagonal, isotrópica, etc). En el caso de LDA, si la matriz de covarianza es diagonal, entonces se usa una distáncia euclidea ponderada. 
+En ambos casos es fundamental escoger la forma de la matriz de covarianza (diagonal, isotrópica, etc). En el caso de LDA, si la matriz de covarianza es diagonal y con varianzas iguales, entonces se usa una distáncia euclidea ponderada. 
 
-Se puede usar regularización añadiendo continuidad entre la matriz de covarianza conjunta (LDA) y la matriz de covarianza de cada clase (QDA). También evita problemas de singularidad.
+Se puede usar regularización (RDA) añadiendo continuidad entre la matriz de covarianza conjunta (LDA) y la matriz de covarianza de cada clase (QDA). También evita problemas de singularidad, en posibles casos de datos escasos.
+
 $$\hat\Sigma_k(\alpha)=\alpha\hat\Sigma_k+(1-\alpha)\hat\Sigma$$
+
+- Para conocer los distintos parametros de la distribucion conjunta, se puede usar el metodo de maxima verosimilitud.
+
+$$
+\hat{\pi}_k = \frac{n_k}{n} \quad \hat{\mu}_k = \frac{1}{n_k} \sum_{i:y_i = k} x_i \quad \hat{\Sigma}_k = \frac{1}{n} \sum_{i=1}^n (x_i - \hat{\mu}_{y_i})(x_i - \hat{\mu}_{y_i})^T
+$$
 
 #### Naive Bayes
 
@@ -526,7 +536,15 @@ $$
 
 En general no es cierto pero puede ser una buena aproximacion para muchos casos. Los parámetros se estiman con la frecuencia de cada clase y categoria en los datos. 
 
+Nuevamente se escoge la clase que maximiza $g_k(x)$.
+
+$$
+g_k(x) = \log \pi_k + \sum_{j=1}^d \log p(x_j | y=k)
+$$
+
 Puede ser necesario usar Laplace smoothing cuando tenemos sparse data con categorias con frecuencia 0 en la muestra.
+
+- Si se asume que asume que todas las variables siguen una distribucion gaussiana, entonces Gaussian Naive Bayes es equivalente a QDA con matrices de covarianza diagonal.
 
 #### Perceptron
 
