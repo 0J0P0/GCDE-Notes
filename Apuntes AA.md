@@ -668,7 +668,7 @@ Para reducir la variancia de un estimador, se puede entrenar varios estimadores 
 - Las muestras que no han sido escogidas son puestas en un set de validacion OOB. (Out of bag)
 - El error OOB es una estimacion del error de generalizacion. No hay necesidad de realizar validacion cruzada.
 
-Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging.
+Los arboles de decision son muy sensibles a los datos de entrenamiento. Pequeños cambios en los datos de entrenamiento pueden llevar a arboles muy diferentes. Por lo tanto sufren de alta varianza. Candidatos perfectos para bagging. En el caso de Random Forest también se usa un subconjunto diferente de las features en cada split/nodo de los arboles.
 
 Pseudo-codigo:
 
@@ -690,7 +690,7 @@ for b in range(B)
 ````
 
 **Ventajas**:
-- No requiere validacion cruzada.
+- No requiere validacion cruzada (OBB error rate)
 - No requiere estandarizacion de los datos.
 - Facil paralelizacion.
 - Metodos para problemas de clasificacion desbalanceados.

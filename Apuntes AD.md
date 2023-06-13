@@ -33,8 +33,10 @@
     - [Profiles](#profiles)
       - [Cloud of profiles $N\_I$ or $N\_J$](#cloud-of-profiles-n_i-or-n_j)
     - [Intertia](#intertia)
+    - [Representation quality](#representation-quality)
   - [Multiple Correspondence Analysis](#multiple-correspondence-analysis)
     - [Studying individuals](#studying-individuals)
+    - [Relationship to CA](#relationship-to-ca)
   - [Cluster Analysis](#cluster-analysis)
     - [Hierarchical clustering](#hierarchical-clustering)
       - [Single nearest neighbor](#single-nearest-neighbor)
@@ -45,6 +47,9 @@
     - [Elbow method](#elbow-method)
     - [Pseudo F index](#pseudo-f-index)
     - [Silhouette index](#silhouette-index)
+    - [Non-hieriarchical clustering](#non-hieriarchical-clustering)
+      - [K-means](#k-means)
+      - [Model-based](#model-based)
   - [Linear Discriminant Analysis](#linear-discriminant-analysis)
     - [LDA vs PCA](#lda-vs-pca)
 
@@ -123,7 +128,7 @@ The proportion of variance explained by the $i^{th}$ principal component is the 
 
 $$\frac{\lambda_i}{\sum_{i=1}^p \lambda_i}$$
 
-in order to decide the number of components to keep, we need to decide the proportion of variance we want to keep ($80\%$). This can be done by looking the magnitude of the eigenvalues or by the *scree plot*.
+in order to decide the number of components to keep, we need to decide the proportion of variance we want to keep ($80\%$). This can be done by looking the magnitude of the eigenvalues or by the *scree plot*. Alternatively the dimensions for which $\lambda_i > \bar\lambda$ can be kept, if the variables have beens standardized $\bar\lambda=1$.
 
 ### Scree plot
 
@@ -180,7 +185,7 @@ $$X_i = u_{1i}Z_1 + u_{2i}Z_2 + ... + u_{mi}Z_m + \epsilon_i$$
 
 where $Z_1, Z_2, ..., Z_m$ are the $m$ principal components (since the eigenvectors are orthonormal), and $u_{1i}, u_{2i}, ..., u_{mi}$ are the eigenvecotrs of the covariance matrix.
 
-To trasnform the PC to factors, we need to standarize the variables. So that 
+To transform the PC to factors, we need to standarize the variables. So that 
 
 $$a_{ij} = u_{ij}\sqrt{\lambda_j} \implies F_i = \frac{Z_i}{\sqrt{\lambda_i}}$$
 
@@ -210,7 +215,7 @@ Oblique rotation is a method of transforming the factor loadings so that the fac
 
 Multidimensional scaling (MDS) is a statistical technique for reducing the dimensionality of a data set by representing the data as points in a geometric space. The geometric space is defined by the distances between the points.  
 
-- Is a generalization of PCA. Instead of using the covariance matrix, it uses the similarity matrix.
+- Is a generalization of PCA. Instead of using the covariance matrix, it uses the similarity matrix $Q=XX^T$.
 
 Similarity and distance are inversevely related. The closer the points are, the more similar they are. The farther the points are, the less similar they are.
 
@@ -273,8 +278,10 @@ Each cell $x_{ij}$ is the number of observations that fall into the $i^{th}$ row
 The null hypothesis is that the rows and columns of the contengency table are independent (the two categorical variables are independent).
 
 - Chi square test of independence
+$$\chi^2 = \sum_{i,j}\left(\frac{real_{ij}-expected_{ij}}{expected_{ij}}\right)$$
 
 $$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n \sum_{i, j} \frac{(f_{ij} - f_{i.}f_{.j})^2}{f_{i.}f_{.j}} = n\phi^2 \sim \chi^2_{(I-1)(J-1)}$$
+  
 
 - where $\hat{x}_{ij} = \frac{x_{i.}x_{.j}}{n}$ is the expected value of the cell $x_{ij}$ under the null hypothesis.
 
@@ -283,10 +290,11 @@ $$\chi^2 = \sum_{i, j}^{I, J} \frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}} = n
   - When independence, the profiles are the same as the mean profiles.
   - The cloud has 0 inertia.
   - The further the data from independence, the higher the inertia and the more the profiles spread from the mean profiles.
+  - As will be later seen, this interpreation matches the physical interpretation of the inertia of the cloud of points.
 
 ### Profiles
 
-Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$.
+Row profiles are found as $f_{j|i} = \frac{f_{ij}}{f_{i.}}$ $R_I=(f_{1|i},\dots,f_{J|i})$ and column profiles are found as $f_{i|j} = \frac{f_{ij}}{f_{.j}}$. Note that the distance measures weight each dimension by $1/f_{·j}$
 
 - **Row profile** shows the distribution of the row variable across the different categories of the column variable
 
@@ -316,6 +324,14 @@ $$
 \sum_{k=1}^K \lambda_k = Inertia(N_I/G_I) = Inertia(N_J/G_J) = \phi^2
 $$
 
+### Representation quality
+We can measure, similary lo in PCA:
+- Quality of point $i$: 
+ $$qlt_s(i)=\frac{inertia of i in rank r}{total inertia of i}=cos^2(O_i,OH_i^s)$$
+- Contribution:
+  $$ctr_s(i)=\frac{inertia of i on rank s}{inertia of N_I on rank s}$$
+
+Supplementary elements can be added to the analysisby using the barycentric properties.
 ```r
 res.ca <- CA(df)
 
@@ -359,6 +375,19 @@ $$
 - $C$ is a constant.
 - $I_k$ is the number of individuals in the category $k$.
 - $x_{ik}$ is 1 if the individual $i$ is in the category $k$ and 0 otherwise.
+
+### Relationship to CA
+By setting $C=I/J$ wwe can obtain the distnace between row and column profiles equivalent to CA. 
+
+The inertia of a category $K$ is given by $\frac{1}{J}\left(1-\frac{I} {I_k}\right)$ and increases when the category is Rare.
+
+The inertia of a variable is given by $\frac{K_j-1}{J}$.
+
+The total inertia of the cloud of categories is $K/J-1$.
+
+As in CA, the barycentric property applies.
+
+
 
 ## Cluster Analysis
 
@@ -419,6 +448,8 @@ $$
 \min \Delta = \min SS_{A \cup B} - (SS_A + SS_B)
 $$
 
+
+Note that the single and complete linkage are sensitive too outliers and Ward's criterion tends to form equally sized clusters.
 ```r
 ?hclust # hiercal clustering
 fit <- hclust(d, method="single") 
@@ -489,6 +520,20 @@ silhouette <- sil(d, res$medoid, res$cluster)
 silhouette$result
 silhouette$plot
 ```
+### Non-hieriarchical clustering
+#### K-means
+Algorithm:
+1. Choose a value K  
+2. Partition all items into an initial set of K clusters
+3. Compute the center of each cluster
+4. Assign each item to the cluster with the nearest center
+5. Go back to 3
+
+It always converges to a minimum, which might be a local minimum.
+
+#### Model-based
+Such as EM (view AA1)
+
 
 ## Linear Discriminant Analysis
 
