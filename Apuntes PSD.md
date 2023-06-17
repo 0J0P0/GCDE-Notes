@@ -22,14 +22,16 @@
   - [Apache Spark](#apache-spark)
     - [Resilient Distributed Dataset (RDD)](#resilient-distributed-dataset-rdd)
     - [Inicializacion](#inicializacion)
-    - [Transformaciones](#transformaciones)
-    - [Acciones](#acciones)
+  - [Transformaciones](#transformaciones)
+  - [Acciones](#acciones)
   - [Task y etapas](#task-y-etapas)
   - [Spark SQL](#spark-sql)
     - [Transformaciones](#transformaciones-1)
     - [Accesos con lenguaje SQL](#accesos-con-lenguaje-sql)
   - [Cassandra](#cassandra)
   - [Cositas](#cositas)
+
+> El cliente es una aplicación informática o un ordenador que consume un servicio remoto en otro ordenador conocido como servidor.
 
 # Entornos de ejecución
 
@@ -146,6 +148,11 @@ Se basa en replicar el espacio de direcciones de una aplicación, permitiendo qu
 # Modelos de programación y runtimes
 
 - Se prioriza la escabilidad horizontal y la tolerancia a fallos sobre el alto rendimiento.
+- Tipos de arquitecturas para sistemas distribuidos:
+  - Cliente-Servidor: 
+    - Modelo *thin client*: el cliente solo se encarga de la interfaz con el usuario, depende principalmente del servidor para el procesamiento.
+    - Modelo *fat client* el cliente realiza la mayor parte posible del procesamiento, mientras que el servidor se encarga de la gestion de datos.
+  - Peer-to-peer: Arquitectura descentralizada en la que todos los nodos son iguales y se comportan como clientes y servidores al mismo tiempo.
 
 ## MapReduce
 
@@ -232,7 +239,7 @@ conf = SparkConf().setAppName("Nombre").setMaster("local") # para ejecucion loca
 sc = SparkContext(conf=conf)
 ```
 
-### Transformaciones
+## Transformaciones
 
 Una	transformación	toma	como	entrada	un	RDD	y	genera	como	resultado	uno	
 o	más	RDD.	Además	se evalúan	de	manera	“perezosa”,	no	se	ejecutan	hasta	
@@ -242,7 +249,7 @@ que	el	planificador	se	encuentra	con	una	acción.
 
 **Wide**: todos los datos necesarios para calcular los registros de una particion. Se necesitan datos de otras particiones.
 
-### Acciones
+## Acciones
 
 Generan un resultado que se guarda en almacenamiento o se muestra en pantalla.
 
@@ -333,10 +340,10 @@ Es de interes:
 - Acceder al minimo numero de nodos para obtener los datos. Leer el minimo numero de particiones por query.
 - Distribucion de datos uniforme entre los nodos para maximizar el paralelismo.
 
-Esrategia de replicacion: SimpleStrategy o NetworkTopologyStrategy.	
+Esrategia de replicacion: *SimpleStrategy* o *NetworkTopologyStrategy*.	
 
-- SimpleStrategy: se replica en los siguientes nodos en el anillo.
-- NetworkTopologyStrategy: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
+- **SimpleStrategy**: se replica en los siguientes nodos en el anillo.
+- **NetworkTopologyStrategy**: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
 
 CAP theorem: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
 - Consistencia: todos los nodos ven los mismos datos al mismo tiempo.
