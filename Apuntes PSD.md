@@ -173,7 +173,7 @@ El procesado de datos se divide en dos partes:
 
 Apache Hadoop es un framework de software diseñado para el procesamiento distribuido de grandes volúmenes de datos en clústeres de servidores. Hadoop se basa en el concepto de MapReduce, que divide las tareas en etapas de mapeo y reducción para procesar datos en paralelo. Además, Hadoop proporciona un sistema de archivos distribuido llamado Hadoop Distributed File System (HDFS) que permite el almacenamiento distribuido y la replicación de datos en el clúster. Hadoop es especialmente útil para procesar datos estructurados y no estructurados y es adecuado para cargas de trabajo batch.
 
-- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellode botella en el master.
+- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellos de botella en el master.
 
 - Se ejecuta en contenedores.
 - Tolerancia a fallos.
@@ -214,13 +214,14 @@ reducer()
 
 Apache Spark es un framework de procesamiento de datos de alto rendimiento y código abierto. A diferencia de Hadoop, que se basa principalmente en MapReduce, Spark utiliza un modelo de computación en memoria, lo que lo hace significativamente más rápido para ciertos tipos de operaciones. Spark ofrece una amplia gama de bibliotecas y herramientas para el procesamiento de datos en tiempo real, análisis de datos, aprendizaje automático (machine learning) y procesamiento de grafos. Spark puede integrarse con Hadoop y otros sistemas de almacenamiento, lo que le permite aprovechar datos de diversas fuentes.
 
-- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellode botella en el master.
+- Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellos de botella en el master.
 
-- Driver (master): Analiza el codigo y pide los recursos necesarios. Asigna las tareas a los executors y monitoriza su ejecucion.
+- Driver (master): Analiza el codigo y pide los recursos necesarios. Asigna las tareas a los executors (slaves) y monitoriza su ejecucion.
 
 ### Resilient Distributed Dataset (RDD)
 
-**RDD**: conjunto de datos inmutable, distribuido y tolerante a fallos.
+**RDD**: conjunto de datos inmutable, distribuido y tolerante a fallos. Componente del core de Spark.
+
 - Solo de lectura.
 - Conjunto de records particionados y distribuidos entre los nodos del cluster. Para poder procesarlos en paralelo.
 - Se pueden crear a partir de datos en HDFS o de otros RDDs.
