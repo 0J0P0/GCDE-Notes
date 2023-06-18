@@ -377,7 +377,7 @@ The Wiener-Hopf filter is the optimal linear filter for a stationary random proc
 **Signal prediction**
 - Observation and reference samples of the same noisy process.
 
-**Signal cancelation**: compare the primary signal $d[n]$ with the interference $x[n]$. The clean signal is $e[n]$.
+**Signal cancelation**: compare the primary signal $d[n]$ with the interference $x[n]$. The clean signal is $e[n]$. The signal that we want to obtain is in $d[n]$.
 - Noisy observations with interferences.
 - Noisy interferences as reference signal.
 
@@ -483,7 +483,7 @@ The convergence of the steepest descent algorithm depends on the eigenvalues of 
 
 - The correlation matrix $R_x$ is symmetric and semi-definite positive. $\lambda_i \geq 0$.
 
-Range of converegence: $\mu \in (0, \frac{2}{\lambda_{max}})$
+**Range of converegence:** $\mu \in (0, \frac{2}{\lambda_{max}})$
 
 - $\mu = \frac{2}{\lambda_{max}}$: the algorithm converges in one iteration.
 
@@ -492,23 +492,38 @@ $$
 \lambda_{max} \leq \sum \lambda_i = \text{trace} (R_x)
 $$
 
-- The speed of convergence is proportional to the dispertionof the eigenvalues. $N_{iter} \propto \frac{\lambda_{max}}{\lambda_{min}}\ln{\delta}$
+**Speed of convergence:**
+- The speed of convergence is proportional to the dispertion of the eigenvalues. 
+
+$$
+N_{iter} \propto \frac{\lambda_{max}}{\lambda_{min}}\ln{\delta}
+$$
+
+- $\delta$ measures the distance of the current filter to the optimal filter.
+  - A higher power $r_x[0]$ implies a lower eigenvalue dispertion.
+  - In the limit, where $r_x[0] \to \infty$, the eigenvalue dispertion approaches to $1$.
   - Low eigenvalue dispertion $\implies$ fast convergence.
   - High eigenvalue dispertion $\implies$ slow convergence.
+  
+  - In the case of a **white noise** signal, all the eigenvalues of the correlation matrix are equal to the variance of the signal. The eigenvalue dispertion is the minimum possible $1$.
 
 - Eigenvalue dispertion affects the speed of convergence but not the misadjustment.
 
 ### LMS algorithm
 
-The LMS algorithm is a stochastic approximation of the steepest descent algorithm.
+The LMS algorithm is a stochastic approximation of the steepest descent algorithm. Since the correlation matrix and cross-correlation vector are unknown, they are estimated by the instantaneous values of the observations.
 
 $$
 \hat{h}[n+1] = \hat{h}[n] + \mu e[n] x[n]
 $$
 
-where $e[n] = d[n] - \hat{h}^T[n] x[n]$ is the instantaneous value of the error.
+where $e[n] = d[n] - \hat{h}^T[n] x[n]$ is the instantaneous value of the error. 
 
-- The gradient of the error surface is estimated by the instantaneous value of the error.
+- The gradient of the error surface is estimated by the instantaneous value of the error. Mimic a desired filter by finding the filter coefficients that relate to producing the least mean square of the error signal 
+
+- Only one iteration can be done per sample. Thus the index $n$ is the same as the observation index.
+
+- It is a stochastic gradient descent method in that the filter is only adapted based on the error at the current time.
 
 - The correlation matrix $R_x$ is estimated by the instantaneous value of the observation vector.
 
