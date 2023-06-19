@@ -449,9 +449,9 @@ By quantizing: $e[n]_q = e[n] + \epsilon_q[n]$
   - Not fixed system. Time variant.
   - The Wiener-Hopf filter should adapt to the statistical variations of the process based on the study of the error.
 
-**Speed of convergence**: The number of samples required to adapt the filter to the new stationarity.
+**Speed of convergence**: It measures the capability of the algorithm to bring the adaptive  solution to the optimal one, independently of the  initial conditions. It is a transient‐phase property.
 
-**Misadjustment**: The difference between the optimal filter and the adaptive filter.
+**Misadjustment**: It measures the stability of the reached  solution, once convergence is achieved. It is due to the randomness of the input data. It is a steady‐state property.
 
 - An observation signal $x[n]$ with *low correlation* implies a *faster convergence*. The level curves tend to form a circle.
 - An observation signal $x[n]$ with *high correlation* implies a *slower convergence*. The level curves tend to form an ellipse.
@@ -477,6 +477,8 @@ $$
 \hat{h}[k+1] = \hat{h}[k] + \mu (r_{dx} - R_x \hat{h}[k])
 $$
 
+- When the level curves of the objective function tend to form a circle, the steepest descent algorithm converges faster, since the gradient points towards the optimum.
+
 ### Convergence analysis
 
 The convergence of the steepest descent algorithm depends on the eigenvalues of the correlation matrix $R_x$.
@@ -492,6 +494,8 @@ $$
 \lambda_{max} \leq \sum \lambda_i = \text{trace} (R_x)
 $$
 
+- An increase of $r_x[0]$ implies an increas of $\lambda_{max}$ and a decrease of the range of convergence.
+
 **Speed of convergence:**
 - The speed of convergence is proportional to the dispertion of the eigenvalues. 
 
@@ -501,9 +505,9 @@ $$
 
 - $\delta$ measures the distance of the current filter to the optimal filter.
   - A higher power $r_x[0]$ implies a lower eigenvalue dispertion.
-  - In the limit, where $r_x[0] \to \infty$, the eigenvalue dispertion approaches to $1$.
-  - Low eigenvalue dispertion $\implies$ fast convergence.
-  - High eigenvalue dispertion $\implies$ slow convergence.
+  - In the limit, where $r_x[0] \to \infty$, the eigenvalue dispertion approaches to $1$, for the min and max eigenvalues tend to be infinite.
+  - Low correlation $\implies$ low eigenvalue dispertion $\implies$ fast convergence.
+  - High correlation $\implies$ high eigenvalue dispertion $\implies$ slow convergence.
   
   - In the case of a **white noise** signal, all the eigenvalues of the correlation matrix are equal to the variance of the signal. The eigenvalue dispertion is the minimum possible $1$.
 
