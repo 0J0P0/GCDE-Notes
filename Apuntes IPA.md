@@ -53,7 +53,7 @@ $$Y = g(X)$$
 
 $$f_Y(y) = \bigg | \frac{dg(x)}{dx} \bigg |^{-1} f_X(x)$$
 
-For adding two random variables (independent): $ Z = Y + X $
+For adding two random variables (independent): $Z = Y + X$
 
 $$f_Z(z) = f_Y(z) * f_X(z)$$
 
@@ -63,7 +63,7 @@ To compare two random variables to understand their relationship. Covariance mea
 
 $$Cov(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y]$$
 
-- Sign: $Cov(X,Y) > 0 $ shows the positive tendency in the linear relationship between $X$ and $Y$.
+- Sign: $Cov(X,Y) > 0$ shows the positive tendency in the linear relationship between $X$ and $Y$.
 
 **Correlation**:
 
@@ -83,26 +83,30 @@ Memoryless processes assume that every sample of the process is independent of i
 
 **Transformation**:
 
-Transformation or _mapping_ of the on the range of values of the input signal onto the range of values of the output signal. 
+Transformation or _mapping_ of the range of values of the input signal onto the range of values of the output signal. 
 
 **Range transform operators**:
 
 Without taking into account the specificities of the image.
 
 - **Grey level mapping** different segments of the range are expanded or compressed.
-    - **Expanded**: the image is brighter. Where the derivative of the trasnformation is greater than 1.
-    - **Compressed**: the image is darker. Where the derivative of the trasnformation is less than 1.
+    - **Expanded**: the image is brighter. When the derivative of the trasnformation is greater than 1.
+    - **Compressed**: the image is darker. When the derivative of the trasnformation is less than 1.
 
 - **Contrast mapping** exapand a range of the input image onto the whole range of the output image.
     - **Clipping**: a set of values of the input image are mapped onto a single value of the output image. Non-reversible since it is not a bijection.
 
 - **Negative mapping**: invert the range of the input image. Do not change contrast.
 
-- **Binarization mapping** map the input image onto a binary image. Using a threshold. (Umbralización)
+- **Binarization mapping** map the input image onto a binary image. Using a threshold.
 
 - **Logarithmic mapping**: compress the input image range.
 
-- **Power-law mapping**: powers larger than 1 make the shadows darker, while powers smaller than 1 make dark regions lighter.
+- **Power-$\gamma$ mapping**: powers larger than 1 make the shadows darker, while powers smaller than 1 make dark regions lighter.
+
+$$
+s = c r^{\gamma}
+$$
 
 - **Pseudo-color mapping**: map the input image onto a color image.
 
