@@ -232,14 +232,14 @@ $$D(q) = E[d(X, q(X))] = \int_{-\infty}^{\infty} d(x, q(x)) f_X(x) dx = \sum_{i=
 A set of signals that can be analysed as a result of the same experiment, whose samples are random variables that keep some order (time, space, etc.).
 
 - $\textbf{X[n]} = \{X[n,1], ..., X[n,i]\}$ is the random process. 
-- $ X[n_0] $ is a random variable.
-- $ X[n_0, i_0] $ is a deterministic value.
+- $X[n_0]$ is a random variable.
+- $X[n_0, i_0]$ is a deterministic value.
 
 **Mean**:
 
 $$m_X[n] = E[X[n]] = \int_{-\infty}^{\infty} x f_X(x;n) dx$$
 
-**Instantaneous power**: deterministic function that measures the average power mof the process at each time instant.
+**Instantaneous power**: deterministic function that measures the average power of the process at each time instant.
 
 $$P_X[n] = E[X[n]^2]$$
 
@@ -498,7 +498,7 @@ $$
 \lambda_{max} \leq \sum \lambda_i = \text{trace} (R_x)
 $$
 
-- An increase of $r_x[0]$ implies an increas of $\lambda_{max}$ and a decrease of the range of convergence.
+- An increase of $r_x[0]$ implies an increase of $\lambda_{max}$ and a decrease of the range of convergence.
 
 **Speed of convergence:**
 - The speed of convergence is proportional to the dispertion of the eigenvalues. 
