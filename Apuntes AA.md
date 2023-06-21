@@ -731,17 +731,20 @@ Boosting es un meta-algortimo de aprendizaje automatico que reduce el sesgo y la
 
 - Combinar varios clasificadores debiles (base) para obtener un clasificador fuerte. Combinación lineal ponderada de los clasificadores debiles en funcion de la exactitud de sus predicciones.
 
+- Reduccion de computacion al estimar un predictor base en cada iteracion.
+
+
 #### AdaBoost classifier
 
 $$
 H(x) = \hat{y} = \text{sign}(\sum_{t=1}^T \alpha_t h_t(x))
 $$
 
-- $h_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$.
+- $h_t(x)$ es el clasificador debil (predictor base) de la iteracion $t$. La idea es entrenar el clasificador debil para minimizar el error de una version ponderada del dataset de entrenamiento.
 - $\alpha_t$ es el peso del clasificador debil de la iteracion $t$ (ponderacion de la exactitud de sus predicciones).
 - $T$ es el numero de iteraciones.
 
-Se busca mejorar el odelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior para corregirla. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
+Se busca mejorar el modelo base en cada iteración. En cada iteración se le da mas peso a las observaciones que fueron mal clasificadas en la iteración anterior para corregirla. Se le da menos peso a las observaciones que fueron bien clasificadas en la iteración anterior.
 
 ```python
 # Inicializar pesos
@@ -763,7 +766,7 @@ for t in range(T):
 ```
 
 - Una forma de entrenar el clasificador debil $h_t$ es formar los arboles de decision de cada feature y escoger el que tenga el menor Gini index.
-  - Los predictores lineales son Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
+  - Los predictores lineales pueden ser Decision Stumps (arboles de decision con un solo nodo interno), con un orden secuencial.
 
 - Una forma de actualizar el conjunto de entrenamiento es seleccionar el mismo numero total de muestras $N$ del conjunto de entrenamiento original, pero con reemplazo. Las muestras que fueron seleccionadas varias veces tienen mayor peso $D_t$. Nuevamente se asignan pesos uniformes a las muestras.
 
@@ -776,7 +779,7 @@ for t in range(T):
 
 Encontrar una función $F(x)$ que minimice el error cuadratico medio. Tal que $F(x) \approx y$.
 
-- Modelo aditivo
+- Modelo aditivo. Aprendizaje secuencial. Cada predictor se entrena en función de los errores del predictor anterior.
 
 $$
 F(x) = \sum_{t=1}^T f_t(x)
@@ -787,10 +790,10 @@ $$
 Los residuos son las diferencias entre las predicciones y los valores reales.
 
 $$
-r_t = y - f_{t}(x)
+r_t = y - F_{t}(x)
 $$
 
-Mejorar el predictor $f_t$ en cada iteración agregando otro predictor y el resultado sea el valor observado del target. Que $f_{t+1}$ se aproxime a $r_t$.
+Mejorar el predictor $f_t$ en cada iteración agregando otro predictor. Que $f_{t+1}$ se aproxime a $r_t$.
 
 - Sofisticando los predictores base mediante una suma.
 
@@ -810,7 +813,7 @@ for t in range(1, T):
 
 - Definir $L(.)$ y $h(.)$.
 - Típicamente $L(.)$ es el error cuadratico medio y $h(.)$ es un arbol de decision.
-
+- Estrategia greedy.
 
 #### Gradient boosting
 

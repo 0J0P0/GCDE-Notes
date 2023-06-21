@@ -53,7 +53,7 @@ $$Y = g(X)$$
 
 $$f_Y(y) = \bigg | \frac{dg(x)}{dx} \bigg |^{-1} f_X(x)$$
 
-For adding two random variables (independent): $ Z = Y + X $
+For adding two random variables (independent): $Z = Y + X$
 
 $$f_Z(z) = f_Y(z) * f_X(z)$$
 
@@ -63,7 +63,7 @@ To compare two random variables to understand their relationship. Covariance mea
 
 $$Cov(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y]$$
 
-- Sign: $Cov(X,Y) > 0 $ shows the positive tendency in the linear relationship between $X$ and $Y$.
+- Sign: $Cov(X,Y) > 0$ shows the positive tendency in the linear relationship between $X$ and $Y$.
 
 **Correlation**:
 
@@ -83,26 +83,30 @@ Memoryless processes assume that every sample of the process is independent of i
 
 **Transformation**:
 
-Transformation or _mapping_ of the on the range of values of the input signal onto the range of values of the output signal. 
+Transformation or _mapping_ of the range of values of the input signal onto the range of values of the output signal. 
 
 **Range transform operators**:
 
 Without taking into account the specificities of the image.
 
 - **Grey level mapping** different segments of the range are expanded or compressed.
-    - **Expanded**: the image is brighter. Where the derivative of the trasnformation is greater than 1.
-    - **Compressed**: the image is darker. Where the derivative of the trasnformation is less than 1.
+    - **Expanded**: the image is brighter. When the derivative of the trasnformation is greater than 1.
+    - **Compressed**: the image is darker. When the derivative of the trasnformation is less than 1.
 
 - **Contrast mapping** exapand a range of the input image onto the whole range of the output image.
     - **Clipping**: a set of values of the input image are mapped onto a single value of the output image. Non-reversible since it is not a bijection.
 
 - **Negative mapping**: invert the range of the input image. Do not change contrast.
 
-- **Binarization mapping** map the input image onto a binary image. Using a threshold. (Umbralización)
+- **Binarization mapping** map the input image onto a binary image. Using a threshold.
 
 - **Logarithmic mapping**: compress the input image range.
 
-- **Power-law mapping**: powers larger than 1 make the shadows darker, while powers smaller than 1 make dark regions lighter.
+- **Power-$\gamma$ mapping**: powers larger than 1 make the shadows darker, while powers smaller than 1 make dark regions lighter.
+
+$$
+s = c r^{\gamma}
+$$
 
 - **Pseudo-color mapping**: map the input image onto a color image.
 
@@ -228,14 +232,14 @@ $$D(q) = E[d(X, q(X))] = \int_{-\infty}^{\infty} d(x, q(x)) f_X(x) dx = \sum_{i=
 A set of signals that can be analysed as a result of the same experiment, whose samples are random variables that keep some order (time, space, etc.).
 
 - $\textbf{X[n]} = \{X[n,1], ..., X[n,i]\}$ is the random process. 
-- $ X[n_0] $ is a random variable.
-- $ X[n_0, i_0] $ is a deterministic value.
+- $X[n_0]$ is a random variable.
+- $X[n_0, i_0]$ is a deterministic value.
 
 **Mean**:
 
 $$m_X[n] = E[X[n]] = \int_{-\infty}^{\infty} x f_X(x;n) dx$$
 
-**Instantaneous power**: deterministic function that measures the average power mof the process at each time instant.
+**Instantaneous power**: deterministic function that measures the average power of the process at each time instant.
 
 $$P_X[n] = E[X[n]^2]$$
 
@@ -377,7 +381,7 @@ The Wiener-Hopf filter is the optimal linear filter for a stationary random proc
 **Signal prediction**
 - Observation and reference samples of the same noisy process.
 
-**Signal cancelation**: compare the primary signal $d[n]$ with the interference $x[n]$. The clean signal is $e[n]$.
+**Signal cancelation**: compare the primary signal $d[n]$ with the interference $x[n]$. The clean signal is $e[n]$. The signal that we want to obtain is in $d[n]$.
 - Noisy observations with interferences.
 - Noisy interferences as reference signal.
 
@@ -449,9 +453,9 @@ By quantizing: $e[n]_q = e[n] + \epsilon_q[n]$
   - Not fixed system. Time variant.
   - The Wiener-Hopf filter should adapt to the statistical variations of the process based on the study of the error.
 
-**Speed of convergence**: The number of samples required to adapt the filter to the new stationarity.
+**Speed of convergence**: It measures the capability of the algorithm to bring the adaptive  solution to the optimal one, independently of the  initial conditions. It is a transient‐phase property.
 
-**Misadjustment**: The difference between the optimal filter and the adaptive filter.
+**Misadjustment**: It measures the stability of the reached  solution, once convergence is achieved. It is due to the randomness of the input data. It is a steady‐state property.
 
 - An observation signal $x[n]$ with *low correlation* implies a *faster convergence*. The level curves tend to form a circle.
 - An observation signal $x[n]$ with *high correlation* implies a *slower convergence*. The level curves tend to form an ellipse.
@@ -477,13 +481,15 @@ $$
 \hat{h}[k+1] = \hat{h}[k] + \mu (r_{dx} - R_x \hat{h}[k])
 $$
 
+- When the level curves of the objective function tend to form a circle, the steepest descent algorithm converges faster, since the gradient points towards the optimum.
+
 ### Convergence analysis
 
 The convergence of the steepest descent algorithm depends on the eigenvalues of the correlation matrix $R_x$.
 
 - The correlation matrix $R_x$ is symmetric and semi-definite positive. $\lambda_i \geq 0$.
 
-Range of converegence: $\mu \in (0, \frac{2}{\lambda_{max}})$
+**Range of converegence:** $\mu \in (0, \frac{2}{\lambda_{max}})$
 
 - $\mu = \frac{2}{\lambda_{max}}$: the algorithm converges in one iteration.
 
@@ -492,23 +498,40 @@ $$
 \lambda_{max} \leq \sum \lambda_i = \text{trace} (R_x)
 $$
 
-- The speed of convergence is proportional to the dispertionof the eigenvalues. $N_{iter} \propto \frac{\lambda_{max}}{\lambda_{min}}\ln{\delta}$
-  - Low eigenvalue dispertion $\implies$ fast convergence.
-  - High eigenvalue dispertion $\implies$ slow convergence.
+- An increase of $r_x[0]$ implies an increase of $\lambda_{max}$ and a decrease of the range of convergence.
+
+**Speed of convergence:**
+- The speed of convergence is proportional to the dispertion of the eigenvalues. 
+
+$$
+N_{iter} \propto \frac{\lambda_{max}}{\lambda_{min}}\ln{\delta}
+$$
+
+- $\delta$ measures the distance of the current filter to the optimal filter.
+  - A higher power $r_x[0]$ implies a lower eigenvalue dispertion.
+  - In the limit, where $r_x[0] \to \infty$, the eigenvalue dispertion approaches to $1$, for the min and max eigenvalues tend to be infinite.
+  - Low correlation $\implies$ low eigenvalue dispertion $\implies$ fast convergence.
+  - High correlation $\implies$ high eigenvalue dispertion $\implies$ slow convergence.
+  
+  - In the case of a **white noise** signal, all the eigenvalues of the correlation matrix are equal to the variance of the signal. The eigenvalue dispertion is the minimum possible $1$.
 
 - Eigenvalue dispertion affects the speed of convergence but not the misadjustment.
 
 ### LMS algorithm
 
-The LMS algorithm is a stochastic approximation of the steepest descent algorithm.
+The LMS algorithm is a stochastic approximation of the steepest descent algorithm. Since the correlation matrix and cross-correlation vector are unknown, they are estimated by the instantaneous values of the observations.
 
 $$
 \hat{h}[n+1] = \hat{h}[n] + \mu e[n] x[n]
 $$
 
-where $e[n] = d[n] - \hat{h}^T[n] x[n]$ is the instantaneous value of the error.
+where $e[n] = d[n] - \hat{h}^T[n] x[n]$ is the instantaneous value of the error. 
 
-- The gradient of the error surface is estimated by the instantaneous value of the error.
+- The gradient of the error surface is estimated by the instantaneous value of the error. Mimic a desired filter by finding the filter coefficients that relate to producing the least mean square of the error signal 
+
+- Only one iteration can be done per sample. Thus the index $n$ is the same as the observation index.
+
+- It is a stochastic gradient descent method in that the filter is only adapted based on the error at the current time.
 
 - The correlation matrix $R_x$ is estimated by the instantaneous value of the observation vector.
 
