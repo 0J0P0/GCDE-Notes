@@ -207,13 +207,13 @@ Apache Hadoop es un framework de software diseñado para el procesamiento distri
 - Slaves (Node manager). Los slaves crean los contenedores para ejecutar los procesos.
 
 **Pasos**:
-- Dividir los datos de entrada en proporciones independientes.
+- Dividir los datos de entrada en proporciones independientes. Particiones determinadas mediante *InputFormat*.   
+  - El trozo de datos que se asigna a cada trozo se denomina *InputSplit*. Unidad de trabajo de un mapper.
+  - Se necesita de *getSplit* para particionar la entrada en *InpusSplit*. 
+  - *Record* es la unidad de trabajo de una funcion map. Corresponde a una linea.
 - Procesar los datos en paralelo. (map task)
 - Ordenar los resultados parciales y se envian a las tareas de reduce como datos de entrada.
   - Los datos de entrada y salida estan organizados en parejas clave-valor.
-  - Es wide porque datos con la misma key pueden estar distribuidos por más de un
-nodo. 
-
 
 ```apache
 map()
@@ -264,8 +264,10 @@ o	más	RDD.	Además	se evalúan	de	manera	“perezosa”,	no	se	ejecutan	hasta
 que	el	planificador	se	encuentra	con	una	acción.
 
 **Narrow**: todos los datos necesarios para calcular los registros de una particion. Se pueden resolver de manera local.
+- `reduce`, `aggregate`
 
 **Wide**: todos los datos necesarios para calcular los registros de una particion. Se necesitan datos de otras particiones.
+- `filter`, `map`
 
 ## Acciones
 
@@ -372,3 +374,5 @@ Enuncia que es imposible para un sistema de computación distribuido garantizar 
 - **Tolerancia de particiones** (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
 
 Priozacion de **AP**. Se puede configurar la consistencia de las queries.
+- Consistencia eventual: temporalmente los nodos pueden tener diferentes versiones de un dato
+pero se garantiza que en algún momento todos los nodos tendrán la última versión
