@@ -31,7 +31,13 @@
   - [Cassandra](#cassandra)
   - [CAP theorem](#cap-theorem)
 
-> El cliente es una aplicación informática o un ordenador que consume un servicio remoto en otro ordenador conocido como servidor.
+> El **cliente** es una aplicación informática o un ordenador que consume un servicio remoto en otro ordenador conocido como servidor.
+
+> La **tolerancia a fallos** es la capacidad de un sistema a seguir continuando su funcionamiento cuando ocurre algún error.
+
+> La **escalabilidad horizontal** hace referencia a una mejora proporcional en el tiempo de ejecución a medida que se añaden nuevos nodos de cálculo/almacenamiento.
+
+> El nivel de **consistencia** corresponde al numero de nodos slaves que envian su respuesta al master.
 
 # Entornos de ejecución
 
@@ -75,8 +81,13 @@ cuando ocurre algún error. Si un nodo cae, los datos deben seguir accesibles.
 # Cloud computing
 
 **Cloud**: conjunto de recursos de computacion (hardware o software) ofrecios como servicios asignados dinamicamente y accesibles a traves de internet.
-- Adaptarse dinamicamente a medida que cambian los requisitos. 
+
+**Ventajas:**
+- Adaptarse dinamicamente a medida que cambian los requisitos. Pagar unicamente por los recursos que se usan.
 - No es necesaria una inversion destinada a la infrestuctura desde el punto de vista del usuario.
+
+**Desventajas:**
+- Añade sobrecarga en el tiempo deejecucion de las aplicaciones.
 
 ## Arquitectura
 
@@ -84,7 +95,7 @@ cuando ocurre algún error. Si un nodo cae, los datos deben seguir accesibles.
 - Gestionan los recursos de computacion.
 - Monitorizan las actividades del cloud.
 - Crear clusters virtuales para los usuarios.
-- crear puertas de entrada.
+- Crear puertas de entrada.
 
 **Nodos de calculo** (nodos de trabajo):
 - Ejecutan las tareas de los usuarios.
@@ -162,6 +173,7 @@ Se basa en replicar el espacio de direcciones de una aplicación, permitiendo qu
 
 **MapReduce**: modelo de programacion para procesar grandes volumenes de datos independientes.
 - Mismos calculos sobre grupos independientes de datos.
+- La sincronización entre las tareas se realiza a cargo del runtime. 
 
 El procesado de datos se divide en dos partes:
 
@@ -315,13 +327,14 @@ spark.sql("SELECT * FROM nombre_tabla") # ejecutar una consulta SQL
 **Apache Cassandra:**
 Apache Cassandra es una base de datos distribuida escalable y de alto rendimiento diseñada para manejar grandes volúmenes de datos en múltiples servidores. Cassandra está diseñada para ser altamente tolerante a fallos y ofrece una arquitectura descentralizada en la que todos los nodos de la base de datos son iguales y no hay un punto único de fallo. Cassandra se basa en el modelo de almacenamiento de columnas y proporciona una alta disponibilidad y escalabilidad lineal. Es especialmente adecuada para aplicaciones que requieren alta velocidad de escritura y acceso a datos distribuidos en múltiples ubicaciones geográficas.
 
-- Tipo de arquitectura: Peer-to-peer. (*descentralizada*) 7Cualquier nodo puede recibir peticiones de los clientes. El nodo que recibe se convierte en el coordinador de la petición.
+- Tipo de arquitectura: Peer-to-peer. (*descentralizada*) Cualquier nodo puede recibir peticiones de los clientes. El nodo que recibe se convierte en el coordinador de la petición.
   - Redirige la parte de la petición correspondiente a cada nodo y espera a recibir las respuestas.
 
 - Base de datos NoSQL.
 
 **Ventajas:**
-- Tolerancia a fallos.
+- Tolerancia a fallos al tener arquitectura peer-to-peer.
+- Replicacion de datos.
 - Soporte a datos no estructurados.
 - Querys en tiempo real.
 
@@ -336,10 +349,9 @@ que contiene el valor en su rango de tokens.
 
 Organizacion de los datos en dos niveles: keyspace y tablas.
 - Basada en la estructura clave-valor por columnas.
-  - La **clave** esta conformada por un conjunto de columnas que identifica las filas y el resto de columnas son los valores.
-- **Primary key** = clave: que identifica univocamente una fila. Puede estar compuesta de una partition key y multiples clustering keys.
-  - **Partition key**: parte de la clave que se usa para identificar el nodo que contiene la fila.
-  - **Clustering key**: parte de la clave que se usa para ordenar las filas dentro de una particion.
+- **Primary key**: conjunto de uno o más atributos que identifica univocamente una *fila de datos*. Puede estar compuesta de una partition key y multiples clustering keys.
+  - **Partition key**: parte de la *primary key* que se usa para identificar el nodo que contiene la fila. Tiene influencia sobre el balanceo de reparticion de datos.
+  - **Clustering key**: parte de la clave (distinta de la *partition key*) que se usa para ordenar las filas dentro de una particion.
 - **Partition**: conjunto de filas que comparten la misma partition key.
 
 Es de interes:
