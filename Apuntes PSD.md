@@ -29,6 +29,7 @@
     - [Transformaciones](#transformaciones-1)
     - [Accesos con lenguaje SQL](#accesos-con-lenguaje-sql)
   - [Cassandra](#cassandra)
+  - [CAP theorem](#cap-theorem)
 
 > El cliente es una aplicación informática o un ordenador que consume un servicio remoto en otro ordenador conocido como servidor.
 
@@ -350,9 +351,12 @@ Esrategia de replicacion: *SimpleStrategy* o *NetworkTopologyStrategy*.
 - **SimpleStrategy**: se replica en los siguientes nodos en el anillo.
 - **NetworkTopologyStrategy**: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
 
-**CAP theorem**: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
-- **Consistencia**: (Consistency) todos los nodos ven los mismos datos al mismo tiempo.
+## CAP theorem
+
+Enuncia que es imposible para un sistema de computación distribuido garantizar simultáneamente las tres propiedades siguientes:
+
+- **Consistencia**: (Consistency) todos los nodos ven los mismos datos al mismo tiempo. Actualización de nodos con el último valor de la base de datos.
 - **Disponibilidad** (Availability): todos los nodos responden a las peticiones.
 - **Tolerancia de particiones** (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
 
-- Priozacion de AP. Se puede configurar la consistencia de las queries.
+Priozacion de **AP**. Se puede configurar la consistencia de las queries.
