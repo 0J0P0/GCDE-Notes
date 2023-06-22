@@ -124,10 +124,10 @@ _Son modelos de servicio de cloud computing..._
 **Virtualizacion**: creacion de una version virtual de un recurso o dispositivo, como un servidor, un sistema de almacenamiento, un sistema operativo o un recurso de red.
 
 **Ventajas**: 
-- Ilusion de multiples sistemas dedicados sobre un unico sistema fisico.
+- Ilusion de multiples sistemas dedicados a cada usuario sobre un unico sistema fisico.
 - Aislamiento de los recursos y facilita la tolerancia a fallos.
 - Facilidad de portabilidad.
-- Para facilitar la compartición de máquinas físicas
+- Para facilitar la compartición de máquinas físicas (hardware)
 - Para facilitar la asignación dinámica de recursos
 - Para facilitar la gestión de los entornos de ejecución (instalación y configuración de
 software)
@@ -179,7 +179,7 @@ Apache Hadoop es un framework de software diseñado para el procesamiento distri
 - Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellos de botella en el master.
 
 - Se ejecuta en contenedores.
-- Tolerancia a fallos.
+- Tolerancia a fallos (replicacion de datos y del master).
 - Integrado con el sistema de ficheros HDFS (Hadoop Distributed File System).
   - HDFS: sistema de ficheros distribuido que permite el acceso a los datos de manera eficiente.
   - fichero dividido en bloques del mismo tamaño (128MB).
@@ -220,6 +220,7 @@ Apache Spark es un framework de procesamiento de datos de alto rendimiento y có
 - Tipo de arquitectura: Cliente-servidor (master-slave). El master recibe las peticiones de los clientes y las distribuye entre los slaves. Posibles cuellos de botella en el master.
 
 - Driver (master): Analiza el codigo y pide los recursos necesarios. Asigna las tareas a los executors (slaves) y monitoriza su ejecucion.
+  - Tolerancia a fallos (replicacion de datos y del master).
 
 ### Resilient Distributed Dataset (RDD)
 
@@ -313,7 +314,7 @@ spark.sql("SELECT * FROM nombre_tabla") # ejecutar una consulta SQL
 **Apache Cassandra:**
 Apache Cassandra es una base de datos distribuida escalable y de alto rendimiento diseñada para manejar grandes volúmenes de datos en múltiples servidores. Cassandra está diseñada para ser altamente tolerante a fallos y ofrece una arquitectura descentralizada en la que todos los nodos de la base de datos son iguales y no hay un punto único de fallo. Cassandra se basa en el modelo de almacenamiento de columnas y proporciona una alta disponibilidad y escalabilidad lineal. Es especialmente adecuada para aplicaciones que requieren alta velocidad de escritura y acceso a datos distribuidos en múltiples ubicaciones geográficas.
 
-- Tipo de arquitectura: Peer-to-peer. Cualquier nodo puede recibir peticiones de los clientes. El nodo que recibe se convierte en el coordinador de la petición.
+- Tipo de arquitectura: Peer-to-peer. (*descentralizada*) 7Cualquier nodo puede recibir peticiones de los clientes. El nodo que recibe se convierte en el coordinador de la petición.
   - Redirige la parte de la petición correspondiente a cada nodo y espera a recibir las respuestas.
 
 - Base de datos NoSQL.
@@ -350,7 +351,7 @@ Esrategia de replicacion: *SimpleStrategy* o *NetworkTopologyStrategy*.
 - **NetworkTopologyStrategy**: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
 
 **CAP theorem**: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
-- **Consistencia**: todos los nodos ven los mismos datos al mismo tiempo.
+- **Consistencia**: (Consistency) todos los nodos ven los mismos datos al mismo tiempo.
 - **Disponibilidad** (Availability): todos los nodos responden a las peticiones.
 - **Tolerancia de particiones** (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
 
