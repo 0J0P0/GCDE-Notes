@@ -29,7 +29,6 @@
     - [Transformaciones](#transformaciones-1)
     - [Accesos con lenguaje SQL](#accesos-con-lenguaje-sql)
   - [Cassandra](#cassandra)
-  - [Cositas](#cositas)
 
 > El cliente es una aplicación informática o un ordenador que consume un servicio remoto en otro ordenador conocido como servidor.
 
@@ -102,19 +101,23 @@ _Son modelos de servicio de cloud computing..._
 ### Infrastuctura como servicio (IaaS)
 
 - Provee de recursos de computacion (CPU, memoria, almacenamiento, red) hardware.
-- El usuario es responsable de la gestion de los recursos. No controla el hardware ni el software ya instalado.
+- Permite reservar recursos de computacion (CPU, memoria, almacenamiento, red) hardware bajo demanda de las necesidades del usuario (de manera dinamica).
+- El usuario se encarga de la instalación del software necesario. No tiene que preocuparse por la administración del hardware.
+  - **Ejemplo**: Amazon Web Services (AWS)
 
 ### Plataforma como servicio (PaaS)
 
 - Ofrece una plataforma para desarrollar, ejecutar y administrar aplicaciones sin la complejidad de construir y mantener la infraestructura asociada.
 - Junto con el software necesario para poder ejecutar las aplicaciones.
-- El usuario es responsable de la gestion de los recursos. No controla el hardware ni el software ya instalado.
+- El usuario no controla el hardware ni el software ya instalado.
+  - **Ejemplo**: Google Cloud, Microsoft Azure
 
 ### Software como servicio (SaaS)
 
 - Se proporciona software a traves de internet.
 - Utilizacion de las aplicaciones que se ejecutan en el cloud.
 - El usuario no tiene control sobre la infrestuctura (hardware o software) que se esta utilizando.
+  - **Ejemplo**: Google Apps, Office 365
 
 # Virtualizacion
 
@@ -321,7 +324,7 @@ Apache Cassandra es una base de datos distribuida escalable y de alto rendimient
 - Querys en tiempo real.
 
 **Desventajas:**
-- No hay un lenguaje estandart.
+- No hay un lenguaje estandar.
 - Eficiencia de la query depende del modelo de datos. Dicta la forma del acceso a los datos.
 - Las consultas de JOIN son muy costosas, ya que las diferentes particiones estan en diferentes nodos.
 
@@ -331,11 +334,11 @@ que contiene el valor en su rango de tokens.
 
 Organizacion de los datos en dos niveles: keyspace y tablas.
 - Basada en la estructura clave-valor por columnas.
-  - La clave esta conformada por un conjunto de columnas que identifica las filas y el resto de columnas son los valores.
-- Primary key = clave: que identifica univocamente una fila. Puede estar compuesta de una partition key y multiples clustering keys.
-  - Partition key: parte de la clave que se usa para identificar el nodo que contiene la fila.
-  - Clustering key: parte de la clave que se usa para ordenar las filas dentro de una particion.
-- Particion: conjunto de filas que comparten la misma partition key.
+  - La **clave** esta conformada por un conjunto de columnas que identifica las filas y el resto de columnas son los valores.
+- **Primary key** = clave: que identifica univocamente una fila. Puede estar compuesta de una partition key y multiples clustering keys.
+  - **Partition key**: parte de la clave que se usa para identificar el nodo que contiene la fila.
+  - **Clustering key**: parte de la clave que se usa para ordenar las filas dentro de una particion.
+- **Partition**: conjunto de filas que comparten la misma partition key.
 
 Es de interes:
 - Acceder al minimo numero de nodos para obtener los datos. Leer el minimo numero de particiones por query.
@@ -346,14 +349,9 @@ Esrategia de replicacion: *SimpleStrategy* o *NetworkTopologyStrategy*.
 - **SimpleStrategy**: se replica en los siguientes nodos en el anillo.
 - **NetworkTopologyStrategy**: se replica en los siguientes nodos en el anillo y en los siguientes nodos en el siguiente datacenter.
 
-CAP theorem: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
-- Consistencia: todos los nodos ven los mismos datos al mismo tiempo.
-- Disponibilidad (Availability): todos los nodos responden a las peticiones.
-- Tolerancia a particiones (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
+**CAP theorem**: Consistencia, disponibilidad y tolerancia a particiones. No se pueden tener las tres a la vez.
+- **Consistencia**: todos los nodos ven los mismos datos al mismo tiempo.
+- **Disponibilidad** (Availability): todos los nodos responden a las peticiones.
+- **Tolerancia de particiones** (Partition tolerance): el sistema sigue funcionando aunque se pierdan nodos.
 
 - Priozacion de AP. Se puede configurar la consistencia de las queries.
-
-
-## Cositas
-
-Un fichero .json tiene un conjunto de records. Cada record es un diccionario que es el dato de entrada de la transformacion.
