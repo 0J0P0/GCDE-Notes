@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage[utf8]{inputenc}
+
+\title{Apuntes CAI}
+\author{JP}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+    \section{Introduction}
+    
+    \subsection{Information Retrieval vs DB Queries}
+    In Database Queries, there is a previous knowledge of the tables and attributes that are going to be used as well as their locations.
+    
+    On the other hand, in Information Retrieva, typicaly, the sistem has to find the matching information that is not on a specific location. There is no way to create the query in advance.
+
+    % create bullet points
+    \begin{itemize}
+        \item advance
+    \end{itemize}
+
+    \subsection{Information retrieval Model}
+    An information retrieval model requieres a query and a set of documents. The model will return a set of documents that are relevant to the query. The query is formed by a set of key terms. The relevance of the documents is determined by the model.
+
+    \subsection{Preprocessing}
+    \begin{itemize}
+        \item Parsing: Extract a structured representation of the document. Wiht indexing, the document is represented as a set of terms.
+        \item Tokenization: Split the document into a set of symbols (words separated by spaces f.e.) called tokens. The tokens are the terms that are going to be used in the index.  Similar to lexical analysis in compilers.
+        % create a subitem
+        % Problem with complex words or different meanings: f.e. "New York" is a single term, but "New" and "York" are also terms.
+        % Stopword removal: Remove words as grammatical words (a, the, etc.) that are not relevant for the search. This may reduce the size of the index.
+        % 
+        \item Enriching: Add additional information to help in the retrieval process. F.e. the position of the term in the document.
+        % Add synonyms of the terms or enrich the query words by grouping in it inside a category (f.e. "car" and "vehicle" are both "automobiles"). This might be useful for disambiguation.
+        \item Stemming: Reduce the vocabulary by grouping together words with the same stem. F.e. "car" and "cars" are reduced to "car". Based mostly on suffixes or prefixes depending on the laguage of search.
+    \end{itemize}
+        
+        \subsection{Text Statistics}
+        The frecuency of words in a text follow a powerlaw known as the Zipf's law. The frecuency of a word is inversely proportional to its rank in the frecuency table.
+
+        \begin{equation}
+            f_i \approx \frac{c}{(i+b)^a}
+        \end{equation}
+
+        where $f_i$ is the frecuency of the word, $i$ is the rank of the word, $a, b, c$ are constants depending on the language and the text.
+
+        \subsubsection{Power laws}
+        By sorting the words of the text in a decreasing order and ploting them against their position in the sorted sequence (rank). The plot will be a straight line in a log-log scale. The slope of the line is the exponent of the power law.
+
+\end{document}
