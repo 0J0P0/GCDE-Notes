@@ -39,7 +39,7 @@
     \textsc{\LARGE Universidad Politécnica de Cataluña}\\[1.5cm]
     \textsc{\Large Grado en Ciencia e Ingeniería de Datos}\\[0.5cm]
     \HRule\\[0.4cm]
-    {\huge\bfseries A}\\[0.4cm]
+    {\huge\bfseries Busqueda y Analisis de la Informacion}\\[0.4cm]
     \HRule\\[1.5cm]
     \vfill
     {\large\today}
@@ -72,12 +72,11 @@ An information retrieval model requieres a query and a set of documents. The mod
 \begin{itemize}
     \item Parsing: Extract a structured representation of the document. Wiht indexing, the document is represented as a set of terms.
     \item Tokenization: Split the document into a set of symbols (words separated by spaces f.e.) called tokens. The tokens are the terms that are going to be used in the index.  Similar to lexical analysis in compilers.
-    % create a subitem
-    % Problem with complex words or different meanings: f.e. "New York" is a single term, but "New" and "York" are also terms.
-    % Stopword removal: Remove words as grammatical words (a, the, etc.) that are not relevant for the search. This may reduce the size of the index.
-    % 
-    \item Enriching: Add additional information to help in the retrieval process. F.e. the position of the term in the document.
-    % Add synonyms of the terms or enrich the query words by grouping in it inside a category (f.e. "car" and "vehicle" are both "automobiles"). This might be useful for disambiguation.
+    \begin{itemize}
+        \item Problem with complex words or different meanings: f.e. "New York" is a single term, but "New" and "York" are also terms.
+        \item Stopword removal: Remove words as grammatical words (a, the, etc.) that are not relevant for the search. This may reduce the size of the index.
+    \end{itemize}
+    \item Enriching: Add additional information to help in the retrieval process. F.e. the position of the term in the document. Add synonyms of the terms or enrich the query words by grouping in it inside a category (f.e. "car" and "vehicle" are both "automobiles"). This might be useful for disambiguation.
     \item Stemming: Reduce the vocabulary by grouping together words with the same stem. F.e. "car" and "cars" are reduced to "car". Based mostly on suffixes or prefixes depending on the laguage of search.
 \end{itemize}
     
