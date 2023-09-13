@@ -64,32 +64,44 @@ On the other hand, in Information Retrieval, typicaly, the sistem has to find th
 \subsection{Information retrieval Model}
 An information retrieval model requieres a query and a set of documents. The model will return a set of documents that are relevant to the query. The query is formed by a set of key terms. The relevance of the documents is determined by the model.
 
-\subsection{Preprocessing}
+\subsection{Information retieval Process}
+
+The offline process consists on \textbf{crawling} \textbf{preprocessing} and \textbf{indexing}. Crawling is the mechanism that explores the web and saves the contents in the DB. Preprocessing is the process of cleaning the data and extracting the relevant information. Indexing is the process of creating the index of the documents. This offline process makes the online process faster.
+
+\section{Preprocessing}
 \begin{itemize}
-    \item Parsing: Extract a structured representation of the document. Wiht indexing, the document is represented as a set of terms.
+    \item \textbf{Parsing}: Extract a structured representation of the document. Wiht indexing, the document is represented as a set of terms.
     \item Tokenization: Split the document into a set of symbols (words separated by spaces f.e.) called tokens. The tokens are the terms that are going to be used in the index.  Similar to lexical analysis in compilers.
     \begin{itemize}
         \item Problem with complex words or different meanings: f.e. "New York" is a single term, but "New" and "York" are also terms.
-        \item Stopword removal: Remove words as grammatical words (a, the, etc.) that are not relevant for the search. This may reduce the size of the index.
+        \item Case folding is useful for setting the words to lowercase, so that "New" and "new" are the same term.
+        \item Stopword removal: Remove words as grammatical words (a, the, etc.) that are not relevant for the search. This may reduce the size of the index but it may also remove relevant information.
     \end{itemize}
     \item Enriching: Add additional information to help in the retrieval process. F.e. the position of the term in the document. Add synonyms of the terms or enrich the query words by grouping in it inside a category (f.e. "car" and "vehicle" are both "automobiles"). This might be useful for disambiguation.
     \item Stemming: Reduce the vocabulary by grouping together words with the same stem. F.e. "car" and "cars" are reduced to "car". Based mostly on suffixes or prefixes depending on the laguage of search.
 \end{itemize}
     
-    \subsection{Text Statistics}
-    The frecuency of words in a text follow a powerlaw function known as the Zipf's law. The frecuency of a word is inversely proportional to its rank \footnote{The rank is the sequence of the most frecuent words in a language.} in the frecuency table.
+\subsection{Text Statistics}
+The frecuency of words in a text follow a powerlaw function known as the \textbf{Zipf's law}. The frecuency of a word is inversely proportional to its rank \footnote{The rank is the sequence of the most frecuent words in a language.} in the frecuency table.
+
+\begin{equation}
+    f_i \approx \frac{c}{(i+b)^a}
+\end{equation}
+
+where $f_i$ is the frecuency of the word, $i$ is the rank of the word, $a, b, c$ are constants depending on the language and the text. $a$ can be calculated by plotting the frecuency of the words in a log-log scale. The slope of the line is the exponent of the power law.
+
+\subsubsection{Power laws}
+By sorting the words of the text in a decreasing order and ploting them against their position in the sorted sequence (rank). The plot will be a straight line in a log-log scale. The slope of the line is the exponent of the power law.
+
+\subsubsection{Heaps' law}
+
+The number of unique words in a text is proportional to the size of the text. The proportionality constant is a parameter of the language. The number of unique words is the vocabulary size.
+
+\begin{equation}
+    \log{d} = k + \beta \log{N}
+\end{equation}
+
+where $d$ is the number of unique words, $N$ is the size of the text and $k, \beta$ are constants depending on the language.
 
 
-
-
-    \begin{equation}
-        f_i \approx \frac{c}{(i+b)^a}
-    \end{equation}
-
-    where $f_i$ is the frecuency of the word, $i$ is the rank of the word, $a, b, c$ are constants depending on the language and the text.
-
-    \subsubsection{Power laws}
-    By sorting the words of the text in a decreasing order and ploting them against their position in the sorted sequence (rank). The plot will be a straight line in a log-log scale. The slope of the line is the exponent of the power law.
-
-    
 \end{document}
